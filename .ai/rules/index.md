@@ -4,4 +4,5 @@ Before planning or editing, find the row whose globs match the file's path and r
 
 | Applies to | Rule file |
 | --- | --- |
+| database/migrations/*bible* | .ai/rules/migrations.md |
 | app/Models/Youtube*.php | .ai/rules/models.md |

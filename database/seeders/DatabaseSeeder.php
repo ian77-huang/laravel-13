@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             YoutubePlaylistItemSeeder::class,
             YoutubeVideoSeeder::class,
             YoutubePlaylistVideoSeeder::class,
+            BibleBookSeeder::class,
+            BibleVerseRefSeeder::class,
+            BibleVerseSeeder::class,
         ]);
     }
 }
