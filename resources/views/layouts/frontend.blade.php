@@ -119,7 +119,7 @@
 <main>@yield('content')</main>
 <footer class="bg-white border-t border-gray-200 mt-20">
   <div class="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-gray-400">
-    &copy; 2026 Go Echo Web Project - Go 1.26.1 - Echo v5 - ServerName({{ env('INSTANCE_NAME') }})
+    &copy; 2026 Laravel 13 Web Project - ServerName({{ env('INSTANCE_NAME') }})
   </div>
 </footer>
 @endsection
