@@ -1,3 +1,27 @@
+x-app: &app
+  build:
+    context: .
+    dockerfile: docker/php/Dockerfile
+  restart: unless-stopped
+  working_dir: /var/www/html
+  environment: &app-env
+    MEMCACHED_HOST: memcached
+    MEMCACHED_PORT: 11211
+    CACHE_STORE: memcached
+    OCTANE_SERVER: swoole
+  volumes:
+    - .:/var/www/html
+  healthcheck:
+    test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/8000"]
+    interval: 5s
+    timeout: 3s
+    retries: 20
+    start_period: 45s
+
+x-app-depends: &app-depends
+  memcached:
+    condition: service_healthy
+
 services:
   memcached:
     image: memcached:1.6-alpine
@@ -11,23 +35,29 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    build:
-      context: .
-      dockerfile: docker/php/Dockerfile
-    container_name: my-new-laravel-app
-    restart: unless-stopped
-    working_dir: /var/www/html
+  app1:
+    <<: *app
+    container_name: my-new-laravel-app-1
     environment:
-      MEMCACHED_HOST: memcached
-      MEMCACHED_PORT: 11211
-      CACHE_STORE: memcached
-      OCTANE_SERVER: swoole
-    volumes:
-      - .:/var/www/html
-    depends_on:
-      memcached:
-        condition: service_healthy
+      <<: *app-env
+      INSTANCE_NAME: app1
+    depends_on: *app-depends
+
+  app2:
+    <<: *app
+    container_name: my-new-laravel-app-2
+    environment:
+      <<: *app-env
+      INSTANCE_NAME: app2
+    depends_on: *app-depends
+
+  app3:
+    <<: *app
+    container_name: my-new-laravel-app-3
+    environment:
+      <<: *app-env
+      INSTANCE_NAME: app3
+    depends_on: *app-depends
 
   nginx:
     image: nginx:1.27-alpine
@@ -39,4 +69,9 @@ services:
       - ./public:/var/www/html/public:ro
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - app
+      app1:
+        condition: service_healthy
+      app2:
+        condition: service_healthy
+      app3:
+        condition: service_healthy

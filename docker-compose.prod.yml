@@ -1,5 +1,5 @@
 services:
-  app:
+  app1: &app-prod
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -12,7 +12,13 @@ services:
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
     command: >
-      sh -c "composer install --no-interaction --no-dev --optimize-autoloader &&
-             [ -d node_modules ] || npm install --no-audit --no-fund &&
-             npm run build &&
+      sh -c "flock /var/www/html/.setup.lock composer install --no-interaction --no-dev --optimize-autoloader &&
+             flock /var/www/html/.setup.lock sh -c '[ -d node_modules ] || npm install --no-audit --no-fund' &&
+             flock /var/www/html/.setup.lock npm run build &&
              php artisan octane:start --server=swoole --host=0.0.0.0 --port=8000"
+
+  app2:
+    <<: *app-prod
+
+  app3:
+    <<: *app-prod
