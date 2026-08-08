@@ -6,3 +6,4 @@ Before planning or editing, find the row whose globs match the file's path and r
 | --- | --- |
 | database/migrations/*bible* | .ai/rules/migrations.md |
 | app/Models/Youtube*.php | .ai/rules/models.md |
+| tests/** | .ai/rules/tests.md |
