@@ -21,6 +21,8 @@
 /storage/*.key
 /storage/pail
 /vendor
+/docker/mysql_data
+/docker/redis_data
 _ide_helper.php
 Homestead.json
 Homestead.yaml
