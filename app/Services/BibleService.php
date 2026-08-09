@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Models\BibleVerseRef;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
+use App\Support\Cache\CacheHub;
+use App\Support\MathCraft;
+use App\Support\TimeCraft;
 use stdClass;
 
 class BibleService
 {
+    public function __construct(private readonly CacheHub $cache) {}
+
     /**
      * Get a verse in the given language by its canonical reference id.
      *
@@ -24,41 +27,26 @@ class BibleService
      */
     public function findVerseByToday(string $language = 'zh-TW'): ?stdClass
     {
+        $cacheKey = 'Bible:Today:'.$language;
+        $seconds = TimeCraft::toMidnightSeconds();
 
-        $CACHE_KEY_BIBLE = 'Bible:Today:'.$language;
+        return $this->cache->remember($cacheKey, function () use ($language) {
+            $rand = MathCraft::seededRandomNumber(date('Y-m-d'));
 
-        $bible = Cache::get($CACHE_KEY_BIBLE);
-        if (! $bible) {
-            $bible = unserialize(Redis::get($CACHE_KEY_BIBLE));
-            if (! $bible) {
-                $dateStr = date('Y-m-d');
-                $rand = hexdec(substr(hash('sha256', $dateStr), 0, 8)) % 124 + 1;
-
-                $bible = BibleVerseRef::query()
-                    ->leftJoin('bible_verses', 'bible_verse_refs.id', '=', 'bible_verses.verse_ref_id')
-                    ->leftJoin('bible_books', 'bible_verses.book_id', '=', 'bible_books.id')
-                    ->whereColumn('bible_books.language', '=', 'bible_verses.language', 'and')
-                    ->where('bible_verse_refs.id', $rand)
-                    ->where('bible_verses.language', $language)
-                    ->select(
-                        ['bible_books.name as book_name',
-                            'bible_verse_refs.chapter',
-                            'bible_verse_refs.verse',
-                            'bible_verses.text']
-                    )
-                    ->toBase()
-                    ->first();
-                if ($bible) {
-                    $now = time();
-                    $endOfDay = mktime(23, 59, 59, (int) date('m'), (int) date('d'), (int) date('Y'));
-                    $seconds = $endOfDay - $now;
-
-                    Redis::setex($CACHE_KEY_BIBLE, $seconds, serialize($bible));
-                    Cache::put($CACHE_KEY_BIBLE, $bible, $seconds);
-                }
-            }
-        }
-
-        return $bible;
+            return BibleVerseRef::query()
+                ->leftJoin('bible_verses', 'bible_verse_refs.id', '=', 'bible_verses.verse_ref_id')
+                ->leftJoin('bible_books', 'bible_verses.book_id', '=', 'bible_books.id')
+                ->whereColumn('bible_books.language', '=', 'bible_verses.language', 'and')
+                ->where('bible_verse_refs.id', $rand)
+                ->where('bible_verses.language', $language)
+                ->select([
+                    'bible_books.name as book_name',
+                    'bible_verse_refs.chapter',
+                    'bible_verse_refs.verse',
+                    'bible_verses.text',
+                ])
+                ->toBase()
+                ->first();
+        }, $seconds);
     }
 }

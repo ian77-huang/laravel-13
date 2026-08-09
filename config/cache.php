@@ -126,11 +126,13 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value determines the classes that can be unserialized from cache
-    | storage. By default, no PHP classes will be unserialized from your
-    | cache to prevent gadget chain attacks if your APP_KEY is leaked.
+    | storage. Setting it to false means NO classes may be unserialized, which
+    | turns every cached object (including stdClass) into an
+    | __PHP_Incomplete_Class. Use true (allow all) since CacheHub caches
+    | stdClass results in the redis tier.
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => true,
 
 ];

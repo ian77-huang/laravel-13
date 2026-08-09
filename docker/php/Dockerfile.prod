@@ -1,0 +1,56 @@
+# syntax=docker/dockerfile:1
+
+FROM php:8.4-cli AS base
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        git \
+        unzip \
+        zip \
+        curl \
+        procps \
+        libmemcached-dev \
+        libssl-dev \
+        libz-dev \
+        libbrotli-dev \
+    && docker-php-ext-install -j"$(nproc)" pcntl pdo_mysql sockets \
+    && docker-php-ext-enable opcache \
+    && pecl install swoole memcached \
+    && docker-php-ext-enable swoole memcached \
+    && apt-get install -y --no-install-recommends libmemcached11t64 \
+    && apt-get purge -y --auto-remove libmemcached-dev libssl-dev libz-dev libbrotli-dev \
+    && pecl clear-cache \
+    && rm -rf /var/lib/apt/lists/* /tmp/pear
+
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+FROM node:22-alpine AS assets
+WORKDIR /build
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY . .
+RUN npm run build
+
+FROM base AS vendor
+WORKDIR /var/www/html
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-scripts --no-autoloader --no-interaction
+COPY . .
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
+    && php artisan package:discover --ansi
+
+FROM base AS runtime
+WORKDIR /var/www/html
+COPY --from=vendor /var/www/html /var/www/html
+COPY --from=assets /build/public/build /var/www/html/public/build
+RUN mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache public-runtime \
+    && php artisan storage:link \
+    && groupadd -g 1000 octane \
+    && useradd -g octane -u 1000 -m -d /home/octane octane \
+    && chown -R octane:octane storage bootstrap/cache public-runtime \
+    && chown -R octane:octane public/storage
+USER octane
+EXPOSE 8000
+CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000"]

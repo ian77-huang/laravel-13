@@ -8,10 +8,10 @@ use Laravel\Octane\Facades\Octane;
 
 class IndexController extends Controller
 {
-    public function index(BibleService $bible)
+    public function index()
     {
         [$verse] = Octane::concurrently([
-            fn () => $bible->findVerseByToday('zh-TW'),
+            fn () => app(BibleService::class)->findVerseByToday('zh-TW'),
         ]);
 
         return view('frontend.index', [

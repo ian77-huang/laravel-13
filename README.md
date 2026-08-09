@@ -18,14 +18,14 @@ Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試�
 - **nginx**：入口，伺服靜態資源並以 `upstream` 對 3 台 app **round-robin 負載平衡**（含 keepalive）。
 - **app1 / app2 / app3**：Laravel + Octane（Swoole）三副本，程式常駐記憶體、支援真正並行抓取。
 - **memcached**：Cache 儲存（`CACHE_STORE=memcached`），三台 app 共用。
-- **mysql / redis**：僅測試環境有，正式環境改用外部連線。
+- **mysql / redis**：僅開發環境有，正式環境改用外部連線。
 
-## 測試環境
+## 開發環境
 
-測試環境 = 基底 + mysql/redis 容器 + 3 台 app（Octane `--watch` 改 code 自動熱更新）。
+開發環境 = 3 台 app（Octane `--watch` 改 code 自動熱更新）+ nginx + memcached + mysql + redis，設定獨立於正式環境。
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.dev.yml up -d
 ```
 
 啟動後網站在 http://localhost:8000 。
@@ -33,16 +33,16 @@ docker compose up -d
 #### 常用指令
 
 ```bash
-docker compose up -d     # 啟動（含 3 台 app 的首次 setup）
-docker compose logs -f app1 app2 app3   # 看 app（Octane）日誌
-docker compose exec nginx nginx -s reload   # 重要！app 重建後重新解析 IP（見下方注意）
-docker compose down      # 停止（保留 docker/mysql_data、docker/redis_data 資料）
-docker compose down -v   # 停止並刪除資料
+docker compose -f docker-compose.dev.yml up -d     # 啟動（含 3 台 app 的首次 setup）
+docker compose -f docker-compose.dev.yml logs -f app1 app2 app3   # 看 app（Octane）日誌
+docker compose -f docker-compose.dev.yml exec nginx nginx -s reload   # 重要！app 重建後重新解析 IP（見下方注意）
+docker compose -f docker-compose.dev.yml down      # 停止（保留 docker/mysql_data、docker/redis_data 資料）
+docker compose -f docker-compose.dev.yml down -v   # 停止並刪除資料
 ```
 
 > **重要**：nginx 的 `upstream` 是**靜態**解析——只在 nginx 啟動/reload 時解析一次 `app1/2/3` 的 IP。若 app 容器重建換了 IP（如 `docker compose up -d --build`），必須執行 `docker compose exec nginx nginx -s reload`，否則請求會打到舊 IP 而 502。
 
-**測試環境禁止 HTTP 快取**：`PreventHttpCache` middleware 只在本機環境（`APP_ENV=local`）對所有 response 送出 `Cache-Control: no-store`，確保每次重新整理都拿到新頁面（驗證負載平衡時 footer 的 `ServerName(...)` 會跳動）。正式環境不受影響。
+**開發環境禁止 HTTP 快取**：`PreventHttpCache` middleware 只在本機環境（`APP_ENV=local`）對所有 response 送出 `Cache-Control: no-store`，確保每次重新整理都拿到新頁面（驗證負載平衡時 footer 的 `ServerName(...)` 會跳動）。正式環境不受影響。
 
 本機連資料庫測試用 `3307`(mysql) / `6380`(redis)：
 
@@ -85,50 +85,77 @@ use Laravel\Octane\Facades\Octane;
 
 ## 正式環境
 
-正式環境**不含** mysql/redis 容器，DB 與 Redis 使用外部服務連線；3 台 app 不開 `--watch`、`APP_ENV=production`。
+正式環境**不含** mysql/redis 容器，DB 與 Redis 使用外部服務連線；3 台 app 不開 `--watch`、`APP_ENV=production`。程式碼在 build 時就**寫進映像**（bake），容器啟動只負責跑 Octane，不做任何安裝。
+
+### 首次部署
 
 ```bash
-cp .env.prod.example .env.prod   # 填入外部 DB/Redis 位址
-docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod up -d --build
+cp .env.prod.example .env.prod   # 填入 APP_KEY、APP_URL、外部 DB/Redis 位址
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 ```
+
+執行資料庫遷移：
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.prod exec app1 php artisan migrate --force
+```
+
+### 更新程式（重新部署）
+
+正式環境的程式碼是 bake 進映像的，更新流程 = 重 build 映像 + 重建容器：
+
+```bash
+# 1. 在伺服器上拉最新程式碼
+git pull
+
+# 2. 重新 build 映像（內部會重跑 npm run build 與 composer install --no-dev）
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+
+# 3. 有資料庫變更時執行遷移
+docker compose -f docker-compose.prod.yml --env-file .env.prod exec app1 php artisan migrate --force
+
+# 4. 重要！nginx 的 upstream 是靜態解析，app 重建後 IP 會變，必須 reload 一次
+docker compose -f docker-compose.prod.yml --env-file .env.prod exec nginx nginx -s reload
+```
+
+> 若有新增/移除 npm 套件（`package.json` 變更），`docker compose ... build --no-cache` 或至少 build 時 assets stage 會因 `package-lock.json` 變更自動重建。
+
+### 正式環境的靜態資源
+
+正式環境沒有把本機 `public/` 掛載進容器。3 台 app 啟動時會把自己的 `public/` 複製到共享 volume `octane_public`，nginx 再以唯讀方式掛載該 volume 伺服靜態檔。此為名為 volume（非 bind mount），資料存於 Docker volume 中。
+
+> 上傳檔案（`storage/app/public`）在正式環境**不會**出現在 nginx 的 volume 中，請改用雲端磁碟（如 S3）並將 `FILESYSTEM_DISK` 指向它，避免部署時被蓋掉。
 
 ## Docker 設定檔說明
 
-專案使用三份 compose 設定檔，透過「疊加」機制組合成不同環境：
+開發與正式是**兩份完全獨立的 compose 設定檔**，不共用、不疊加。共用僅限於 `docker/php/opcache.ini` 與 `docker/nginx/` 設定：
 
-| 檔案 | 用途 | 啟動時是否自動套用 |
+| 檔案 | 用途 | 啟動指令 |
 |---|---|---|
-| `docker-compose.yml` | 基底：共享服務（3×app / nginx / memcached） | 是 |
-| `docker-compose.override.yml` | 測試：基底 + mysql/redis + `--watch` | 是（預設自動合併） |
-| `docker-compose.prod.yml` | 正式：無 mysql/redis、外部連線、production 模式 | 否（需用 `-f` 指定） |
+| `docker-compose.dev.yml` | 開發：app×3 + nginx + memcached + mysql + redis，volume 掛載 + `--watch` | `docker compose -f docker-compose.dev.yml up -d` |
+| `docker-compose.prod.yml` | 正式：app×3 + nginx + memcached（無 mysql/redis），映像 bake 程式碼 | `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build` |
 
-### docker-compose.yml（基底 — 兩環境共享）
+### docker-compose.dev.yml（開發環境）
 
-- `memcached`：快取服務，`memcached:1.6-alpine`，本機 port 11211。`healthcheck` 用 `nc` 檢查（原 `memcached-tool` 不存在）。
-- `app1 / app2 / app3`：由 `docker/php/Dockerfile` 自行 build（PHP 8.4-cli + Swoole + memcached/pdo_mysql/sockets + opcache）。三台共用同一個 `volumes .:/var/www/html` 掛載，靠 `x-app` YAML anchor 去重複定義。內建 TCP healthcheck（探測 8000），讓 nginx 等三台就緒才啟動。此層不設定 `DB_HOST` / `REDIS_HOST`，留給各環境填入。
-- `nginx`：入口，`8000:80`，掛載 `public/`（唯讀）與 `docker/nginx/default.conf`。`depends_on` 三台 app 的 `service_healthy`，避免 Octane 未就緒時的初啟 502。
-
-### docker-compose.override.yml（測試環境）
-
-`docker compose up` 會自動把此檔合併進基底，不需手動指定。它覆寫：
-
-- `mysql`：本機 port 3307，資料持久化於 `docker/mysql_data`。
+- `memcached`：快取服務，`memcached:1.6-alpine`，本機 port 11211。
+- `mysql`：本機 port 3307，資料持久化於 `docker/mysql_data`（git 忽略）。
 - `redis`：本機 port 6380，`appendonly yes` 持久化。
-- `app1/2/3`：填 `DB_HOST: mysql`、`REDIS_HOST: redis`（容器內用**服務名**互連）、`APP_ENV: local`、`APP_DEBUG: true`，`command` 用 `flock /var/www/html/.setup.lock` 串行化三台的 `composer install` / `npm install`（避免同時寫入共享掛載的 vendor/node_modules），最後 Octane `--watch` 啟動。
+- `app1 / app2 / app3`：由 `docker/php/Dockerfile` build（PHP 8.4-cli + Swoole + memcached/pdo_mysql/sockets + opcache + node + composer）。三台共用同一個 `volumes .:/var/www/html` 掛載，靠 `x-app` YAML anchor 去重複定義。`command` 用 `flock /var/www/html/.setup.lock` 串行化三台的 `composer install` / `npm install`（避免同時寫入共享掛載的 vendor/node_modules），最後 Octane `--watch` 啟動。
+- `nginx`：入口，`8000:80`，掛載本機 `public/`（唯讀）與 `docker/nginx/default.test.conf`。`depends_on` 三台 app 的 `service_healthy`，避免 Octane 未就緒時的初啟 502。
 
 ### docker-compose.prod.yml（正式環境）
 
-不自動套用，需用 `-f` 指定並搭配 `.env.prod`：
+需搭配 `.env.prod`（`--env-file` 指定）填入 `APP_KEY`、`APP_URL`、外部 DB/Redis 位址：
 
-```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod up -d
-```
+- 無 mysql/redis 容器，`DB_HOST` / `REDIS_HOST` 讀 `.env.prod` 的外部位址。
+- `APP_ENV: production`、`APP_DEBUG: false`、`APP_KEY` 由環境變數提供（映像內無 `.env`）。
+- `app1 / app2 / app3`：由 `docker/php/Dockerfile.prod`（多階段）build，映像內已含 `composer install --no-dev`、`npm run build` 後的完整程式碼與 assets。容器以非 root 的 `octane` 使用者執行，啟動時只做 `cp -r public/. → 共享 volume` 再跑 Octane。
+- `nginx`：入口，掛載共享 volume `octane_public`（唯讀）與 `docker/nginx/default.conf`。
 
-它覆寫 `app1/2/3`：
+### Dockerfile 差異
 
-- 移除 mysql/redis 容器，`DB_HOST` / `REDIS_HOST` 改讀 `.env.prod` 的外部位址。
-- `APP_ENV: production`、`APP_DEBUG: false`。
-- `command`：`flock` 串行化 `composer install --no-dev --optimize-autoloader`、`npm install`、`npm run build`，最後 Octane 啟動（無 `--watch`）。
+- `docker/php/Dockerfile`（開發）：基底映像，含 node/composer 供開發時安裝相依；程式碼靠 volume 掛載。
+- `docker/php/Dockerfile.prod`（正式）：多階段（base → assets → vendor → runtime），runtime 不含 node 與建置工具，映像自帶應用程式。
 
 ### nginx 負載平衡（docker/nginx/default.conf）
 
@@ -143,7 +170,7 @@ upstream octane_backend {
 
 - 預設 round-robin，三台自動輪流。
 - `keepalive 32` 讓 nginx 對三台各保持長連線（需配合 `proxy_http_version 1.1`）。
-- 靜態 upstream 的限制與 reload 步驟見「測試環境」的注意事項。
+- 靜態 upstream 的限制與 reload 步驟見「開發環境」的注意事項。
 
 ## 本機常用指令
 
