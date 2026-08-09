@@ -1,16 +1,17 @@
 @extends('layouts.base')
 
 @section('layout-content')
-<div class="navbar bg-base-100 shadow-sm" x-data="layoutApp">
-  <div class="navbar-start">
-    <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-        </svg>
-      </div>
-      <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        {{-- {{range .Menus}}
+    <div class="navbar bg-base-100 shadow-sm" x-data="layoutApp">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    {{-- {{range .Menus}}
         {{ if gt (len .Childs) 0 }}
         <li>
           <a>{{.Name}}</a>
@@ -24,13 +25,13 @@
         <li><a href="{{.Url}}">{{.Name}}</a></li>
         {{end}}
         {{end}} --}}
-      </ul>
-    </div>
-    <a class="btn btn-ghost text-xl">rbbr</a>
-  </div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      {{-- {{range .Menus}}
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl">rbbr</a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                {{-- {{range .Menus}}
       {{ if gt (len .Childs) 0 }}
       <li class="relative group flex items-center">
         <a class="cursor-pointer gap-0.5" href="{{.Url}}">
@@ -53,10 +54,10 @@
       <li><a href="{{.Url}}">{{.Name}}</a></li>
       {{end}}
       {{end}} --}}
-    </ul>
-  </div>
-  <div class="navbar-end gap-3">
-    {{-- <div class="dropdown dropdown-end">
+            </ul>
+        </div>
+        <div class="navbar-end gap-3">
+            {{-- <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
         <div class="indicator">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,11 +93,11 @@
         </template>
       </ul>
     </div> --}}
-    {{-- <select class="select w-25" @change="LangHandler">
+            {{-- <select class="select w-25" @change="LangHandler">
       <option {{if eq .Lang "en" }}selected{{end}} value="en">English</option>
       <option {{if eq .Lang "zh-TW" }}selected{{end}} value="zh-TW">繁體中文</option>
     </select> --}}
-    {{-- {{ if .IsSignedIn }}
+            {{-- {{ if .IsSignedIn }}
     <button class="btn btn-square" @click="LogoutHandler">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="size-6">
@@ -114,20 +115,20 @@
 
     </button>
     {{ end }} --}}
-  </div>
-</div>
-<main>
-    <div class="m-auto my-10 w-[90%]">
-        <section>
-            <div class="w-full">
-                @yield('content')
-            </div>
-        </section>
+        </div>
     </div>
-</main>
-<footer class="bg-white border-t border-gray-200 mt-20">
-  <div class="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-gray-400">
-    &copy; 2026 Laravel 13 Web Project - ServerName({{ env('INSTANCE_NAME') }})
-  </div>
-</footer>
+    <main>
+        <div class="m-auto my-10 w-[90%]">
+            <section>
+                <div class="w-full">
+                    @yield('content')
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="mt-20 border-t border-gray-200 bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-6 text-center text-xs text-gray-400">
+            &copy; 2026 Laravel 13 Web Project - ServerName({{ env('INSTANCE_NAME') }})
+        </div>
+    </footer>
 @endsection
