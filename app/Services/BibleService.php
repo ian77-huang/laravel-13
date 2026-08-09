@@ -27,7 +27,7 @@ class BibleService
      */
     public function findVerseByToday(string $language = 'zh-TW'): ?stdClass
     {
-        $cacheKey = 'Bible:Today:'.$language;
+        $cacheKey = constants('Cache_Key_Index_Bible').$language;
         $seconds = TimeCraft::toMidnightSeconds();
 
         return $this->cache->remember($cacheKey, function () use ($language) {

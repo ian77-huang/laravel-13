@@ -116,7 +116,15 @@
     {{ end }} --}}
   </div>
 </div>
-<main>@yield('content')</main>
+<main>
+    <div class="m-auto my-10 w-[90%]">
+        <section>
+            <div class="w-full">
+                @yield('content')
+            </div>
+        </section>
+    </div>
+</main>
 <footer class="bg-white border-t border-gray-200 mt-20">
   <div class="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-gray-400">
     &copy; 2026 Laravel 13 Web Project - ServerName({{ env('INSTANCE_NAME') }})

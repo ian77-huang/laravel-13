@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'branding', 'cId', 'title', 'description', 'image', 'publishedAt', 'keywords', 'customUrl', 'state', 'etag'])]
-class YoutubeChannel extends Model
+class YoutubeChannels extends Model
 {
     public $timestamps = false;
 
@@ -22,8 +22,12 @@ class YoutubeChannel extends Model
     protected function casts(): array
     {
         return [
+            'id' => 'string',
+            'cId' => 'integer',
+            'title' => 'string',
             'branding' => 'array',
             'image' => 'array',
+            'state' => 'boolean',
             'publishedAt' => 'datetime',
         ];
     }

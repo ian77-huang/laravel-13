@@ -3,14 +3,17 @@
 @section('title', '首頁')
 
 @section('content')
-    <div class="card bg-base-100 shadow">
-        <div class="card-body">
-            <h1 class="card-title">12355</h1>
+<div class="card w-full bg-base-100 card-md shadow-sm mt-5">
+    <div class="card-body">
+        <h2 class="card-title">每日經文</h2>
+         <div class="text-xl p-5">
             @if ($bible)
-                <p>{{ $bible->text ?? '' }}({{ $bible->book_name }} {{ $bible->chapter }}:{{ $bible->verse }})</p>
+                <div>{{ $bible->text ?? '' }}</div>
+                <div class="mt-2">( {{ $bible->book_name }} {{ $bible->chapter }}:{{ $bible->verse }} )</div>
             @else
-                <p>找不到經文</p>
+                <div>找不到經文</div>
             @endif
-        </div>
+         </div>
     </div>
+</div>
 @endsection
