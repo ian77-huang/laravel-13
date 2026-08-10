@@ -93,7 +93,7 @@
         </template>
       </ul>
     </div> --}}
-            <select class="select w-25" @change="LangHandler">
+            <select class="select w-25" x-data="localeSwitcher" @change="change">
                 <option @selected(app()->getLocale() === 'en') value="en">English</option>
                 <option @selected(app()->getLocale() === 'zh-TW') value="zh-TW">繁體中文</option>
             </select>
