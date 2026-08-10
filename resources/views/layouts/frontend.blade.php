@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('layout-content')
-    <div class="navbar bg-base-100 shadow-sm" x-data="layoutApp">
+    <div class="navbar bg-base-100 shadow-sm" x-data="App">
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -93,10 +93,10 @@
         </template>
       </ul>
     </div> --}}
-            {{-- <select class="select w-25" @change="LangHandler">
-      <option {{if eq .Lang "en" }}selected{{end}} value="en">English</option>
-      <option {{if eq .Lang "zh-TW" }}selected{{end}} value="zh-TW">繁體中文</option>
-    </select> --}}
+            <select class="select w-25" @change="LangHandler">
+                <option @selected(app()->getLocale() === 'en') value="en">English</option>
+                <option @selected(app()->getLocale() === 'zh-TW') value="zh-TW">繁體中文</option>
+            </select>
             {{-- {{ if .IsSignedIn }}
     <button class="btn btn-square" @click="LogoutHandler">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
