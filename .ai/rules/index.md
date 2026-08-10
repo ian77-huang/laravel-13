@@ -4,9 +4,10 @@ Before planning or editing, find the row whose globs match the file's path and r
 
 | Applies to | Rule file |
 | --- | --- |
+| public/build/** | .ai/rules/build.md |
 | app/Support/Cache/** | .ai/rules/cache.md |
 | config/cache.php | .ai/rules/config.md |
-| docker-compose*.yml, .env | .ai/rules/general.md |
+| docker-compose*.yml, .env, docker-compose.dev.yml | .ai/rules/general.md |
 | app/Http/Middleware/** | .ai/rules/middleware.md |
 | database/migrations/*bible* | .ai/rules/migrations.md |
 | app/Models/Youtube*.php | .ai/rules/models.md |
