@@ -1,11 +1,40 @@
 # My New Laravel
 
 Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試兩種環境。
+前端使用 Tailwind CSS v4 + daisyUI 5 + Alpine.js 3，以 Vite 打包。
+
+## 目前網站狀態
+
+首頁（`/`）目前包含兩個區塊：
+
+- **每日經文**：`BibleService::findVerseByToday('zh-TW')` 以日期為種子隨機挑選一節經文，快取至當天午夜。
+- **YouTube 頻道**：`YoutubeService::getChannels()` 隨機取 6 個啟用頻道，以卡片網格呈現；圖片經 `x-img` 元件（`x-lazy` directive）使用 IntersectionObserver 延遲載入。
+
+### 功能特色
+
+- **多語系切換**：`zh-TW` / `en`，透過 navbar 的 `x-locale-switcher`（Alpine `localeSwitcher` component）呼叫 `POST /api/lang`，`SetLocale` middleware 依 `locale` cookie 套用白名單語系（`config/app.php` 的 `available_locales`）。
+- **Blade 元件**：自訂 `x-card`、`x-fieldset`、`x-img`、`x-icon.*`（brands/solid）、`x-locale-switcher`、`x-layouts.mc`、`x-layouts.*`。
+- **快取**：memcached（`CACHE_STORE=memcached`），`CacheHub` 封裝，cache key 集中於 `config/constants.php`。
+- **Octane 並行**：`IndexController` 以 `Octane::concurrently()` 同時抓取經文與頻道。
+
+### 路由
+
+| Method | URI | 說明 |
+|---|---|---|
+| `GET` | `/` | 首頁（每日經文 + YouTube 頻道） |
+| `POST` | `/api/lang` | 切換語系（session + cookie） |
+
+### 資料庫
+
+- `bible_*`：聖經（`bible_books`、`bible_verse_refs`、`bible_verses`，多語經文）。
+- `youtube_*`：YouTube 頻道 / 播放清單 / 影片資料。
+- Seeder：`php artisan db:seed` 填入測試資料（經文、頻道等）。
 
 ## 環境需求
 
 - Docker Desktop
 - Composer（本機，用於 tinker/測試等本機工具）
+- Node.js（本機，用於 `npm run dev` / `npm run build`）
 
 > 本機不需安裝 PHP / Nginx / MySQL / Redis —— 全部都在 Docker 容器內。
 
@@ -52,6 +81,17 @@ DB_PORT=3307
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6380
 ```
+
+### 前端（Vite）
+
+前端資源位於 `resources/`，由 Vite 打包（Tailwind v4 + daisyUI 5 + Alpine 3）：
+
+```bash
+npm run dev      # 開發模式（HMR）
+npm run build    # 打包正式資源
+```
+
+Alpine 相關程式碼位於 `resources/js/`：`app.js` 註冊 `localeSwitcher` data component 與 `x-lazy` directive（`components/lazy-image.js`）。
 
 ### 資料庫遷移與種子
 
@@ -178,6 +218,8 @@ upstream octane_backend {
 php artisan test --compact        # 執行測試
 php artisan tinker                # 本機互動式除錯
 vendor/bin/pint --dirty           # 格式化 PHP 程式碼
+npm run dev                       # 前端開發（Vite HMR）
+npm run build                     # 前端打包
 ```
 
 > 注意：`tinker` / `test` 等 CLI 指令在本機跑（非容器內），但容器內服務仍是主要執行環境。
