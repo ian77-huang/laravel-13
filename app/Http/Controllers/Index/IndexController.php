@@ -11,14 +11,15 @@ class IndexController extends Controller
 {
     public function index()
     {
+        $locale = app()->getLocale();
         [$verse, $youtubeChannels] = Octane::concurrently([
-            fn () => app(BibleService::class)->findVerseByToday('zh-TW'),
+            fn () => app(BibleService::class)->findVerseByToday($locale),
             fn () => app(YoutubeService::class)->getChannels(),
         ]);
 
         return view('frontend.index', [
             'bible' => $verse,
-            "youtubeChannels" => $youtubeChannels
+            'youtubeChannels' => $youtubeChannels,
         ]);
     }
 }

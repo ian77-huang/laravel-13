@@ -1,9 +1,8 @@
-@extends('layouts.frontend')
+@extends('layouts.frontend.base')
 
-@section('title', '首頁')
+@section('title', __('menu.index'))
 
 @section('content')
-
     <x-layouts.mc>
         <x-fieldset class="mb-5">
             <x-slot:icon><x-icon.solid.book-bible /></x-slot:icon>
@@ -12,7 +11,7 @@
                     @if ($bible)
                         {{ $bible->text ?? '' }}( {{ $bible->book_name }} {{ $bible->chapter }}:{{ $bible->verse }} )
                     @else
-                        <div>找不到經文</div>
+                        <div>{{ __('bible.not_found') }}</div>
                     @endif
                 </section>
             </x-card>
@@ -27,8 +26,8 @@
                             <x-card>
                                 <div class="grid h-full grid-rows-[auto_auto_1fr]">
                                     <div>
-                                        <x-img class="m-auto rounded-md" aria-label="{{ $channel->title }} 圖片"
-                                            alt="{{ $channel->title }} 圖片" width="240" height="240"
+                                        <x-img class="m-auto rounded-md" aria-label="{{ $channel->title }} {{ __('youtube.image') }}"
+                                            alt="{{ $channel->title }} {{ __('youtube.image') }}" width="240" height="240"
                                             src="{{ resizeImageYoutubeChannel($channel, 240) }}" />
                                     </div>
                                     <div class="mb-1 mt-5 h-px border-t border-t-gray-200"></div>
@@ -40,7 +39,7 @@
                         </a>
                     @endforeach
                 @else
-                    <div>無 Youtube Channel</div>
+                    <div>{{ __('youtube.empty') }}</div>
                 @endif
             </section>
         </x-fieldset>
