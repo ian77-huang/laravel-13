@@ -7,6 +7,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | public/build/** | .ai/rules/build.md |
 | app/Support/Cache/** | .ai/rules/cache.md |
 | config/cache.php | .ai/rules/config.md |
+| resources/css/** | .ai/rules/css.md |
 | docker-compose*.yml, .env, docker-compose.dev.yml | .ai/rules/general.md |
 | app/Http/Middleware/** | .ai/rules/middleware.md |
 | database/migrations/*bible* | .ai/rules/migrations.md |
