@@ -3,8 +3,9 @@
 @section('title', '首頁')
 
 @section('content')
+
     <x-layouts.mc>
-        <x-fieldset>
+        <x-fieldset class="mb-5">
             <x-slot:icon><x-icon.solid.book-bible /></x-slot:icon>
             <x-card>
                 <section>
@@ -16,7 +17,7 @@
                 </section>
             </x-card>
         </x-fieldset>
-        <x-fieldset>
+        <x-fieldset class="mb-5">
             <x-slot:icon><x-icon.brands.youtube /></x-slot:icon>
             <section
                 class="justify=items-start grid w-full grid-cols-2 gap-1 md:grid-cols-3 md:gap-2.5 md:p-5 xl:grid-cols-4">

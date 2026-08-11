@@ -31,29 +31,35 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                {{-- {{range .Menus}}
-      {{ if gt (len .Childs) 0 }}
-      <li class="relative group flex items-center">
-        <a class="cursor-pointer gap-0.5" href="{{.Url}}">
-          {{ .Name }}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-            <path fill-rule="evenodd"
-              d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-              clip-rule="evenodd" />
-          </svg>
-        </a>
-        <ul class="absolute left-0 top-full ml-0 hidden group-hover:block bg-base-100 rounded-box shadow p-2 z-10">
-          {{ range .Childs }}
-          <li>
-            <a href="{{ .Url }}">{{ .Name }}</a>
-          </li>
-          {{ end }}
-        </ul>
-      </li>
-      {{ else }}
-      <li><a href="{{.Url}}">{{.Name}}</a></li>
-      {{end}}
-      {{end}} --}}
+                @if ($menus)
+                    @foreach ($menus as $menu)
+                        @if ($menu['childs'])
+                            <li class="group relative flex items-center">
+                                <a class="cursor-pointer gap-0.5" href="{{ $menu['url'] }}">
+                                    {{ $menu['name'] }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                        class="size-5">
+                                        <path fill-rule="evenodd"
+                                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                                <ul
+                                    class="bg-base-100 rounded-box absolute left-0 top-full z-10 ml-0 hidden p-2 shadow group-hover:block">
+                                    @foreach ($menu['childs'] as $child)
+                                        <li>
+                                            <a href="{{ $child['url'] }}">{{ $child['name'] }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ $menu['url'] }}">{{ $menu['name'] }}</a>
+                            </li>
+                        @endif
+                    @endforeach
+                @endif
             </ul>
         </div>
         <div class="navbar-end gap-3">
