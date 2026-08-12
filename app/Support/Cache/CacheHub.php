@@ -39,7 +39,7 @@ class CacheHub
     {
         $ttl ??= $this->ttl;
 
-        $cached = $this->get($key);
+        $cached = $this->getFromTiers($key, null, $ttl);
 
         if ($cached !== null) {
             return $cached;
@@ -61,6 +61,16 @@ class CacheHub
      */
     public function get(string $key, mixed $default = null): mixed
     {
+        return $this->getFromTiers($key, $default, $this->ttl);
+    }
+
+    /**
+     * Look up the given key across both tiers, backfilling L1 with $ttl when L2 hits.
+     *
+     * L1 命中直接回傳；L1 miss 時查 L2，命中則以 $ttl 回填 L1。
+     */
+    private function getFromTiers(string $key, mixed $default, int|DateInterval|DateTimeInterface|null $ttl): mixed
+    {
         $value = $this->l1->get($key);
 
         if ($value !== null) {
@@ -70,7 +80,7 @@ class CacheHub
         $value = $this->l2->get($key);
 
         if ($value !== null) {
-            $this->l1->put($key, $value, $this->ttl);
+            $this->l1->put($key, $value, $ttl);
 
             return $value;
         }
