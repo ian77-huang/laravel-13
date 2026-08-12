@@ -1,14 +1,40 @@
 import Alpine from 'alpinejs'
 import localeSwitcher from './components/locale-switcher'
 import lazyImage from './components/lazy-image'
+import lib from './components/lib'
+
+const libSupport = lib()
+
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href="/user/logout"]')
+    if (link) {
+        e.preventDefault()
+        if (link.classList.contains('pointer-events-none')) return
+        link.classList.add('opacity-50', 'pointer-events-none')
+
+        $fetch.post('/user/logout', {}).finally(() => {
+            window.location.href = '/user/login'
+        })
+    }
+})
 
 window.Alpine = Alpine
 
 Alpine.data('localeSwitcher', localeSwitcher)
+Alpine.data('usersMenus', (initialTitle) => ({
+    async gotoUserUrl(event) {
+        window.location.href = event.currentTarget.dataset.url
+    },
+}))
+
+window.$fetch = libSupport.fetch
+Alpine.magic('fetch', () => libSupport.fetch)
+
 Alpine.directive('lazy', lazyImage)
 
 Alpine.data('App', () => ({
     init() {
+        console.log($fetch)
         console.log()
     },
 }))

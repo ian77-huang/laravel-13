@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
+
 class MenuService
 {
     private function createMenu(string $name, string $url, ?array $childs = null): array
@@ -16,11 +18,24 @@ class MenuService
 
     public function frontend(): array
     {
+        $users = [
+        ];
+
+        if (Auth::check()) {
+            $users['/user/logout'] = $this->createChilds(trans('menu.user.logout'), '/user/logout');
+        } else {
+            $users['/user/register'] = $this->createChilds(trans('menu.user.register'), '/user/register');
+            $users['/user/login'] = $this->createChilds(trans('menu.user.login'), '/user/login');
+        }
+
+        $path = '/'.request()->path();
+        if (isset($users[$path])) {
+            unset($users[$path]);
+        }
+
         return [
-            $this->createMenu(trans('menu.index'), '/'),
-            $this->createMenu(trans('menu.user'), '/user', [
-                $this->createChilds(trans('menu.user.login'), '/user/login'),
-            ]),
+            'index' => $this->createMenu(trans('menu.index'), '/'),
+            'user' => $this->createMenu(trans('menu.user'), '/user', $users),
         ];
     }
 

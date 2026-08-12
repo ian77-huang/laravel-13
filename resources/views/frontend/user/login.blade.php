@@ -3,5 +3,5 @@
 @section('title', __('menu.user.login'))
 
 @section('user-content')
-    888888
+    888888000
 @endsection
