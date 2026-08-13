@@ -189,7 +189,7 @@
                                 </div>
                                 <div class="form-control w-full">
                                     <label class="label"><span
-                                            class="label-text font-medium">{{ __('user.profile.settings.email.title') }}</span></label>
+                                            class="label-text font-medium">{{ __('user.profile.settings.email') }}</span></label>
                                     <input type="email" x-model="form.email" class="input input-bordered w-full"
                                         :disabled="isEmailDisable" />
                                     <template x-if="isEmailDisable">
@@ -203,13 +203,13 @@
 
                             <div class="form-control w-full">
                                 <label class="label"><span
-                                        class="label-text font-medium">{{ __('user.profile.settings.phone.title') }}</span></label>
+                                        class="label-text font-medium">{{ __('user.profile.settings.phone') }}</span></label>
                                 <input type="tel" x-model="form.phone" class="input input-bordered w-full"
                                     placeholder="0912345678" />
                             </div>
                             <div class="form-control grid w-full gap-2.5">
                                 <label class="label"><span
-                                        class="label-text font-medium">{{ __('user.profile.settings.bio.title') }}</span></label>
+                                        class="label-text font-medium">{{ __('user.profile.settings.bio') }}</span></label>
                                 <textarea x-model="form.bio" class="textarea textarea-bordered h-24 w-full"
                                     placeholder='{{ __('user.profile.settings.bio.placeholder') }}'></textarea>
                             </div>
