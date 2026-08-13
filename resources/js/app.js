@@ -30,11 +30,13 @@ Alpine.data('usersMenus', (initialTitle) => ({
 window.$fetch = libSupport.fetch
 Alpine.magic('fetch', () => libSupport.fetch)
 
+window.$validation = libSupport.validation
+Alpine.magic('validation', () => libSupport.validation)
+
 Alpine.directive('lazy', lazyImage)
 
 Alpine.data('App', () => ({
     init() {
-        console.log($fetch)
         console.log()
     },
 }))

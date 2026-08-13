@@ -49,5 +49,13 @@ const lib = () => ({
             return request(input, 'OPTIONS', null, headers)
         },
     },
+    validation: {
+        isEmail(str) {
+            const input = document.createElement('input')
+            input.type = 'email'
+            input.value = str
+            return input.checkValidity()
+        },
+    },
 })
 export default lib

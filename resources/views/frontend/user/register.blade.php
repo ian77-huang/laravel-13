@@ -33,6 +33,10 @@
                                 this.setErrorMessage(
                                     '{{ __('error.cannot_be_empty', ['Name' => __('user.auth.name')]) }}'
                                 );
+                            } else if (this.form.name.length < this.minLengthAccount) {
+                                this.setErrorMessage(
+                                    '{{ __('error.min_characters_required', ['Name' => __('user.auth.name'), 'Length' => constants('minLengthAccount')]) }}'
+                                );
                             }
                         }
                         if (field === 'email') {
@@ -40,9 +44,10 @@
                                 this.setErrorMessage(
                                     '{{ __('error.cannot_be_empty', ['Name' => __('user.auth.email')]) }}'
                                 );
-                            } else if (this.form.email.length < this.minLengthAccount) {
+                            }
+                            if (!$validation.isEmail(this.form.email)) {
                                 this.setErrorMessage(
-                                    '{{ __('error.min_characters_required', ['Name' => __('user.auth.email'), 'Length' => constants('minLengthAccount')]) }}'
+                                    '{{ __('error.invalid_format', ['Name' => __('user.auth.email')]) }}'
                                 );
                             }
                         }
@@ -106,7 +111,7 @@
                         placeholder='{{ __('placeholder.input.value', ['Name' => __('user.auth.name')]) }}' />
                     <div class="divider"></div>
                     <label class="label">{{ __('user.auth.email') }}</label>
-                    <input type="text" class="input" x-model="form.email"
+                    <input type="email" class="input" x-model="form.email"
                         placeholder='{{ __('placeholder.input.value', ['Name' => __('user.auth.email')]) }}'
                         autocomplete="username" />
                     <label class="label">{{ __('user.auth.password') }}</label>
