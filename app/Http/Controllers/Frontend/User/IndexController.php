@@ -20,9 +20,11 @@ class IndexController extends Controller
         // ]);
 
         $user = Auth::user();
+        $profile = $user->profile;
 
         return view('frontend.user.index', [
             'user' => $user,
+            'profile' => $profile,
         ]);
     }
 }
