@@ -57,5 +57,15 @@ const lib = () => ({
             return input.checkValidity()
         },
     },
+    action: {
+        userLogin() {
+            window.location.href = '/user/login'
+        },
+        userLogout() {
+            $fetch.post('/user/logout', {}).finally(() => {
+                window.location.href = '/user/login'
+            })
+        },
+    },
 })
 export default lib

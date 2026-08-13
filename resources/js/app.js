@@ -5,11 +5,15 @@ import lib from './components/lib'
 
 const libSupport = lib()
 
-const userLogout = () => {
-    $fetch.post('/user/logout', {}).finally(() => {
-        window.location.href = '/user/login'
-    })
-}
+window.$action = libSupport.action
+
+window.$fetch = libSupport.fetch
+Alpine.magic('fetch', () => libSupport.fetch)
+
+window.$validation = libSupport.validation
+Alpine.magic('validation', () => libSupport.validation)
+
+Alpine.directive('lazy', lazyImage)
 
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href="/user/logout"]')
@@ -18,7 +22,7 @@ document.addEventListener('click', (e) => {
         if (link.classList.contains('pointer-events-none')) return
         link.classList.add('opacity-50', 'pointer-events-none')
 
-        userLogout()
+        $action.userLogout()
     }
 })
 
@@ -30,16 +34,6 @@ Alpine.data('usersMenus', (initialTitle) => ({
         window.location.href = event.currentTarget.dataset.url
     },
 }))
-
-window.$userLogout = userLogout
-
-window.$fetch = libSupport.fetch
-Alpine.magic('fetch', () => libSupport.fetch)
-
-window.$validation = libSupport.validation
-Alpine.magic('validation', () => libSupport.validation)
-
-Alpine.directive('lazy', lazyImage)
 
 Alpine.data('App', () => ({
     init() {

@@ -61,7 +61,7 @@
                                 alert(data.message)
 
                                 setTimeout(() => {
-                                    $userLogout();
+                                    $action.userLogout();
                                 }, 1000);
                             } else {
                                 const errors = data.errors ? Object.values(data.errors).flat() : [];
