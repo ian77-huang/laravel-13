@@ -6,4 +6,5 @@ return [
     'user.login' => '登入',
     'user.logout' => '登出',
     'user.register' => '註冊',
+    'user.profile' => '個人檔案',
 ];
