@@ -83,11 +83,13 @@
 
                         const res = await $fetch.post('/user/register', this.form);
                         const data = await res.json();
+
                         if (res.status === 201) {
                             alert(data.message)
                             window.location.href = "/";
                         } else {
-                            alert(data.message)
+                            const errors = data.errors ? Object.values(data.errors).flat() : [];
+                            this.setErrorMessage(errors.join("\n") || (data.message || ''));
                         }
                     },
                 }
@@ -101,8 +103,7 @@
                 <fieldset class="fieldset">
                     <label class="label">{{ __('user.auth.name') }}</label>
                     <input type="text" class="input" x-model="form.name"
-                        placeholder='{{ __('placeholder.input.value', ['Name' => __('user.auth.name')]) }}'
-                        autocomplete="username" />
+                        placeholder='{{ __('placeholder.input.value', ['Name' => __('user.auth.name')]) }}' />
                     <div class="divider"></div>
                     <label class="label">{{ __('user.auth.email') }}</label>
                     <input type="text" class="input" x-model="form.email"

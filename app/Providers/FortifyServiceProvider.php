@@ -41,7 +41,6 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::ignoreRoutes();
 
-        // 2. 自訂 Prefix（例如將所有 Fortify 路由移到 /user 下）
         Route::group(['prefix' => 'user'], function () {
             $this->loadRoutesFrom(base_path('vendor/laravel/fortify/routes/routes.php'));
         });

@@ -5,6 +5,7 @@ const request = async (input, method = 'GET', body = null, headers = null) => {
         method,
         headers: {
             'Content-Type': 'application/json',
+            Accept: 'application/json',
             ...(headers && typeof headers === 'object' ? headers : {}),
             'X-CSRF-TOKEN': csrfToken,
         },
