@@ -7,4 +7,6 @@ return [
     'user.logout' => '登出',
     'user.register' => '註冊',
     'user.profile' => '個人檔案',
+    'user.reset-password' => '重設密碼',
+    'user.change-password' => '更新密碼',
 ];

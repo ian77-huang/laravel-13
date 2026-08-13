@@ -5,6 +5,12 @@ import lib from './components/lib'
 
 const libSupport = lib()
 
+const userLogout = () => {
+    $fetch.post('/user/logout', {}).finally(() => {
+        window.location.href = '/user/login'
+    })
+}
+
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href="/user/logout"]')
     if (link) {
@@ -12,9 +18,7 @@ document.addEventListener('click', (e) => {
         if (link.classList.contains('pointer-events-none')) return
         link.classList.add('opacity-50', 'pointer-events-none')
 
-        $fetch.post('/user/logout', {}).finally(() => {
-            window.location.href = '/user/login'
-        })
+        userLogout()
     }
 })
 
@@ -26,6 +30,8 @@ Alpine.data('usersMenus', (initialTitle) => ({
         window.location.href = event.currentTarget.dataset.url
     },
 }))
+
+window.$userLogout = userLogout
 
 window.$fetch = libSupport.fetch
 Alpine.magic('fetch', () => libSupport.fetch)

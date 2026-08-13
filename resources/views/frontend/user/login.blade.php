@@ -66,13 +66,8 @@
                         if (!this.validateAll()) {
                             return;
                         }
-                        const res = await fetch('/user/login', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(this.form),
-                        })
+                        const res = await $fetch.post('/user/login', this.form);
+
                         const data = await res.json();
                         if (res.status === 201) {
                             alert(data.message)

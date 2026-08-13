@@ -30,12 +30,6 @@
                     },
                     async initData() {
                         try {
-                            // const res = await fetch('/api/user/profile');
-                            // if (!res.ok) throw new Error('{{ __('user.profile.read.failed') }}');
-                            // rs = await res.json();
-                            // if (rs.data !== null) {
-                            //     this.form = rs.data;
-                            // }
                             this.isEmailDisable = (this.form.email !== "")
                         } catch (err) {
                             this.showToast(err.message, 'error');
@@ -70,17 +64,11 @@
                         }
                         this.loading = true;
                         try {
-                            const res = await fetch('/user/profile', {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    name: this.form.name,
-                                    phone: this.form.phone,
-                                    email: this.form.email,
-                                    bio: this.form.bio,
-                                })
+                            const res = await $fetch.put('/user/profile', {
+                                name: this.form.name,
+                                phone: this.form.phone,
+                                email: this.form.email,
+                                bio: this.form.bio,
                             });
 
                             const data = await res.json();
@@ -110,7 +98,7 @@
 
                         this.loading = true;
                         try {
-                            const res = await fetch('/api/user/profile/avatar', {
+                            const res = await $fetch.post('/api/user/profile/avatar', {
                                 method: 'POST',
                                 body: formData
                             });

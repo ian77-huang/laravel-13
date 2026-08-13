@@ -85,17 +85,17 @@
                                     </div>
                                     <div>
                                         <span
-                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.email.title') }}</span>
+                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.email') }}</span>
                                         <p class="font-medium">{{ $profile->email }}</p>
                                     </div>
                                     <div>
                                         <span
-                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.phone.title') }}</span>
+                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.phone') }}</span>
                                         <p class="font-medium">{{ $profile->phone }}</p>
                                     </div>
                                     <div>
                                         <span
-                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.bio.title') }}</span>
+                                            class="text-base-content/50 block text-xs">{{ __('user.profile.settings.bio') }}</span>
                                         <p class="whitespace-pre-line font-medium">
                                             {{ $profile->bio }}
                                         </p>

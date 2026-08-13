@@ -7,6 +7,7 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\LoginResponse;
+use App\Http\Responses\PasswordUpdateResponse;
 use App\Http\Responses\RegisterResponse;
 use App\Models\User;
 use Illuminate\Auth\Events\Login;
@@ -21,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\PasswordUpdateResponse as PasswordUpdateResponseContract;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Laravel\Fortify\Fortify;
 
@@ -33,6 +35,7 @@ class FortifyServiceProvider extends ServiceProvider
     {
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
+        $this->app->singleton(PasswordUpdateResponseContract::class, PasswordUpdateResponse::class);
 
         Fortify::loginView(function () {
             return view('frontend.user.login', [
@@ -42,6 +45,9 @@ class FortifyServiceProvider extends ServiceProvider
         });
         Fortify::registerView(function () {
             return view('frontend.user.register');
+        });
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('frontend.user.reset-password');
         });
     }
 
