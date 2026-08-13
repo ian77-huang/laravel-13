@@ -1,6 +1,6 @@
 @extends('layouts.frontend.user')
 
-@section('title', __('menu.user.login'))
+@section('title', __('menu.user'))
 
 @section('user-content')
     <div class="container mx-auto max-w-4xl px-4 py-8">
@@ -10,10 +10,10 @@
                     <span class="text-primary text-xl font-bold">User Dashboard</span>
                 </div>
                 <div class="flex-none gap-4">
-                    {{-- {{ if .user.Account }}
-                <div class="badge badge-outline">{{ __('user.auth.account') }}：{{ .user.Account }}</div>
-                {{ end }}
-                {{ if .user.IsAdmin }}
+                    @if ($user && $user->email)
+                        <div class="badge badge-outline">{{ __('user.auth.account') }}：{{ $user->email }}</div>
+                    @endif
+                    {{-- {{ if .user.IsAdmin }}
                 <div class="badge badge-secondary">{{ __('user.role_admin') }}</div>
                 {{ else }}
                 <div class="badge badge-primary">{{ __('user.role_member') }}</div>
@@ -40,18 +40,18 @@
                             </div>
                         </div>
                         <h2 class="card-title">
-                            {{-- {{if and .profile .profile.Name}}
-                        <p>{{ __('user.profile.settings.name') }}：{{.profile.Name}}</p>
-                        {{else}}
-                        {{ __('user.name_not_set') }}
-                        {{end}} --}}
+                            @if ($user && $user->name)
+                                <p>{{ __('user.profile.settings.name') }}：{{ $user->name }}</p>
+                            @else
+                                {{ __('user.name_not_set') }}
+                            @endif
                         </h2>
                         <p class="text-base-content/60 text-sm">
-                            {{-- {{if and .profile .profile.Email}}
-                        {{.profile.Email}}
-                        {{else}}
-                        {{ __('user.email_not_set') }}
-                        {{end}} --}}
+                            @if ($user && $user->email)
+                                {{ $user->email }}
+                            @else
+                                {{ __('user.email_not_set') }}
+                            @endif
                         </p>
                         <div class="divider my-2"></div>
                         <div class="flex items-center gap-2">

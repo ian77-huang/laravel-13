@@ -9,7 +9,7 @@ Route::get('/', [IndexController::class, 'index']);
 
 // User
 Route::prefix('user')->group(function () {
-    Route::get('', [UserIndexController::class, 'index']);
+    Route::get('', [UserIndexController::class, 'index'])->middleware('auth');
 });
 
 // Api

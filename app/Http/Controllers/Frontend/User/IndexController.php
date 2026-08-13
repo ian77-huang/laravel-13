@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend\User;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 // use App\Services\BibleService;
 // use App\Services\YoutubeService;
@@ -18,9 +19,10 @@ class IndexController extends Controller
         //     fn () => app(YoutubeService::class)->getChannels(),
         // ]);
 
+        $user = Auth::user();
+
         return view('frontend.user.index', [
-            // 'bible' => $verse,
-            // 'youtubeChannels' => $youtubeChannels,
+            'user' => $user,
         ]);
     }
 }
