@@ -25,8 +25,8 @@
                     <div class="card-body items-center text-center">
                         <div class="avatar placeholder mb-4">
                             <div class="text-neutral-content w-24 rounded-full">
-                                @if ($profile && $profile . avatar_url)
-                                    <img src='{{ $profile . avatar_url }}' alt="Avatar" />
+                                @if ($profile && $profile->avatar_url)
+                                    <img src='{{ $profile->avatar_url }}' alt="Avatar" />
                                 @else
                                     <svg class="text-base-content/30 h-full w-full" viewBox="0 0 250 250" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
