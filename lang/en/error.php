@@ -5,5 +5,6 @@ return [
     'min_characters_required' => ':Name must be at least :Length characters',
     'passwords_do_not_match' => 'Passwords do not match',
     'auth.password.new.same.as.current' => 'New password cannot be the same as the current password',
+    'auth.current_password.mismatch' => 'The provided password does not match your current password.',
     'invalid_format' => 'Invalid :Name format.',
 ];

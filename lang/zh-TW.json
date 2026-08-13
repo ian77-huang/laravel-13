@@ -1,0 +1,5 @@
+{
+    "The provided password was incorrect.": "提供的密碼不正確。",
+    "The provided two factor authentication code was invalid.": "提供的雙重驗證驗證碼無效。",
+    "The provided two factor recovery code was invalid.": "提供的雙重驗證救援碼無效。"
+}
