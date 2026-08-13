@@ -6,14 +6,18 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Responses\LoginResponse;
 use App\Http\Responses\RegisterResponse;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Laravel\Fortify\Fortify;
 
@@ -24,10 +28,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
 
         Fortify::loginView(function () {
-            return view('frontend.user.login');
+            return view('frontend.user.login', [
+                'isRemembered' => request()->hasCookie('remember_preference'),
+                'email' => request()->cookie('email_preference'),
+            ]);
         });
         Fortify::registerView(function () {
             return view('frontend.user.register');
@@ -39,12 +47,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::ignoreRoutes();
-
-        Route::group(['prefix' => 'user'], function () {
-            $this->loadRoutesFrom(base_path('vendor/laravel/fortify/routes/routes.php'));
-        });
-
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
@@ -67,6 +69,20 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by(
                 ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
             );
+        });
+
+        Event::listen(Login::class, function ($event) {
+            if (request()->boolean('remember')) {
+                // 種一顆保存 30 天的 Cookie 記住偏好
+                Cookie::queue('remember_preference', '1', 60 * 24 * 365);
+                Cookie::queue('email_preference', request()->string('email'), 60 * 24 * 365);
+            } else {
+                // 如果沒勾，把 Cookie 刪除
+                Cookie::queue(
+                    Cookie::forget('remember_preference'),
+                    Cookie::forget('email_preference')
+                );
+            }
         });
     }
 }
