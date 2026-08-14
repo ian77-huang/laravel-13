@@ -4,6 +4,7 @@ return [
     'title' => 'User',
     'register' => 'Register',
     'login' => 'Login',
+    'auth.id' => 'Id',
     'auth.name' => 'Name',
     'auth.account' => 'Account',
     'auth.email' => 'Email',

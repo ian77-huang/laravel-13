@@ -42,7 +42,6 @@ class CreateRole extends CreateRecord
             foreach ($actions as $action) {
                 $permissionName = "{$module}.{$action}";
 
-                // 確保權限存在
                 Permission::firstOrCreate([
                     'name' => $permissionName,
                     'guard_name' => $guardName,

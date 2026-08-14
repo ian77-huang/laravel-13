@@ -2,13 +2,13 @@
 
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
-use App\Filament\Admin\Resources\Roles\RoleResource;
+use App\Filament\Admin\Resources\Users\UserResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListRoles extends ListRecords
+class ListUsers extends ListRecords
 {
-    protected static string $resource = RoleResource::class;
+    protected static string $resource = UserResource::class;
 
     protected function getHeaderActions(): array
     {

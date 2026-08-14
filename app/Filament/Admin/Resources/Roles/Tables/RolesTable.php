@@ -15,12 +15,16 @@ class RolesTable
         return $table
             ->columns([
                 TextColumn::make('id')
+                    ->label(__('role.id'))
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label(__('role.name'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('guard_name'),
+                TextColumn::make('guard_name')
+                    ->label(__('role.guard_name')),
                 TextColumn::make('created_at')
+                    ->label(__('role.created_at'))
                     ->dateTime()
                     ->sortable(),
             ])
@@ -28,11 +32,13 @@ class RolesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label(__('button.edit')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label(__('button.delete')),
                 ]),
             ]);
     }

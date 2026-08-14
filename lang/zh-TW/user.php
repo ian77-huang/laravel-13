@@ -4,6 +4,7 @@ return [
     'title' => '使用者',
     'register' => '註冊',
     'login' => '登入',
+    'auth.id' => '編號',
     'auth.name' => '名字',
     'auth.account' => '帳號',
     'auth.email' => '電子郵件',
