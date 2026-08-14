@@ -33,11 +33,12 @@
                                 this.setErrorMessage(
                                     '{{ __('error.cannot_be_empty', ['Name' => __('user.auth.name')]) }}'
                                 );
-                            } else if (this.form.name.length < this.minLengthAccount) {
-                                this.setErrorMessage(
-                                    '{{ __('error.min_characters_required', ['Name' => __('user.auth.name'), 'Length' => constants('minLengthAccount')]) }}'
-                                );
                             }
+                            // else if (this.form.name.length < this.minLengthAccount) {
+                            //     this.setErrorMessage(
+                            //         '{{ __('error.min_characters_required', ['Name' => __('user.auth.name'), 'Length' => constants('minLengthAccount')]) }}'
+                            //     );
+                            // }
                         }
                         if (field === 'email') {
                             if (!this.form.email) {
