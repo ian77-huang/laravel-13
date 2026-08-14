@@ -24,6 +24,11 @@ class MenuService
         if (Auth::check()) {
             $users['/user/profile'] = $this->createChilds(trans('menu.user.profile'), '/user/profile');
             $users['/user/change-password'] = $this->createChilds(trans('menu.user.change-password'), '/user/change-password');
+
+            if (Auth::user()->is_admin) {
+                $users['/admin'] = $this->createChilds(trans('menu.admin'), '/admin');
+            }
+
             $users['/user/logout'] = $this->createChilds(trans('menu.user.logout'), '/user/logout');
         } else {
             $users['/user/register'] = $this->createChilds(trans('menu.user.register'), '/user/register');

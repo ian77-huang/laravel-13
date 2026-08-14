@@ -2,8 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Roles\Schemas;
 
-use Filament\Actions\Action;
-use Filament\Forms\Components\CheckboxList;
+use App\Filament\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -13,12 +12,12 @@ use Illuminate\Validation\Rules\Unique;
 
 class RoleForm
 {
-    private static function createCheckbox(?string $name = null): CheckboxList
-    {
-        return CheckboxList::make($name)
-            ->selectAllAction(fn (Action $action) => $action->label(__('button.select_all')))
-            ->deselectAllAction(fn (Action $action) => $action->label(__('button.deselect_all')));
-    }
+    // private static function createCheckbox(?string $name = null): CheckboxList
+    // {
+    //     return CheckboxList::make($name)
+    //         ->selectAllAction(fn (Action $action) => $action->label(__('button.select_all')))
+    //         ->deselectAllAction(fn (Action $action) => $action->label(__('button.deselect_all')));
+    // }
 
     public static function configure(Schema $schema): Schema
     {
@@ -28,7 +27,7 @@ class RoleForm
         $actions = config('permissions.actions');
 
         foreach ($modules as $moduleKey => $module) {
-            array_push($checkboxList, self::createCheckbox($moduleKey)
+            array_push($checkboxList, CheckboxList::make($moduleKey)
                 ->label(__($module))
                 ->options(
                     fn (): array => collect($actions[$moduleKey])

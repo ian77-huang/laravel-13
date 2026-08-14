@@ -3,6 +3,7 @@
 return [
     'modules' => [
         'user' => '使用者',
+        'role' => '角色',
     ],
     'navigation' => [
         'permission' => '權限',

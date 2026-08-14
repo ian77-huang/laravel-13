@@ -3,6 +3,7 @@
 return [
     'index' => 'Index',
     'user' => 'User',
+    'admin' => 'Admin Panel',
     'user.login' => 'Login',
     'user.logout' => 'Logout',
     'user.register' => 'Register',

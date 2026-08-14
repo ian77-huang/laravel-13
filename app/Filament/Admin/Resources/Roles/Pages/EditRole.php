@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
+use App\Services\PermissionService;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
@@ -55,14 +56,9 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        foreach (array_keys(config('permissions.modules')) as $module) {
-            $data[$module] = $this->record->permissions
-                ->filter(fn ($permission): bool => str_starts_with($permission->name, "{$module}."))
-                ->map(fn ($permission): string => str_replace("{$module}.", '', $permission->name))
-                ->values()
-                ->all();
-        }
+        $modulePermissions = app(PermissionService::class)
+            ->formatPermissionsByModule($this->record->permissions);
 
-        return $data;
+        return array_merge($data, $modulePermissions);
     }
 }
