@@ -22,16 +22,18 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
+    protected static ?int $navigationSort = 2;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function getNavigationGroup(): string|UnitEnum|null
     {
-        return __('permission.navigation.permission');
+        return __('navigation.member');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('permission.navigation.role');
+        return __('navigation.label.role');
     }
 
     public static function getModelLabel(): string

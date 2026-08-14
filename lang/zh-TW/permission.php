@@ -2,11 +2,12 @@
 
 return [
     'modules' => [
-        'user' => '會員管理',
+        'user' => '使用者',
     ],
     'navigation' => [
         'permission' => '權限',
         'role' => '角色',
+        'member' => '會員管理',
     ],
     'actions' => [
         'view' => '檢視',

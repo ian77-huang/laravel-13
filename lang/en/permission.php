@@ -2,11 +2,12 @@
 
 return [
     'modules' => [
-        'user' => 'Member Management',
+        'user' => 'User',
     ],
     'navigation' => [
         'permission' => 'Permission',
         'role' => 'Role',
+        'member' => 'Member Management',
     ],
     'actions' => [
         'view' => 'View',
