@@ -35,6 +35,21 @@ class UserResource extends Resource
         return __('navigation.label.user');
     }
 
+    public static function getBreadcrumb(): string
+    {
+        return __('navigation.member');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('user.user');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('user.users');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);

@@ -36,14 +36,19 @@ class RoleResource extends Resource
         return __('navigation.label.role');
     }
 
+    public static function getBreadcrumb(): string
+    {
+        return __('navigation.member');
+    }
+
     public static function getModelLabel(): string
     {
-        return __('permission.navigation.role'); // 單數，如「角色」
+        return __('role.role');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('permission.navigation.role'); // 複數，如「角色」
+        return __('role.roles');
     }
 
     public static function form(Schema $schema): Schema

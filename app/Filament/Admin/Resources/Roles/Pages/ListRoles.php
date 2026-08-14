@@ -10,6 +10,11 @@ class ListRoles extends ListRecords
 {
     protected static string $resource = RoleResource::class;
 
+    public function getBreadcrumb(): ?string
+    {
+        return __('role.role');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
