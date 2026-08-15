@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'zh_TW'),
 
     'available_locales' => explode(',', env('APP_AVAILABLE_LOCALES', 'en,zh_TW')),
 

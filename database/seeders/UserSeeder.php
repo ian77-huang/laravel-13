@@ -16,13 +16,29 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $user = User::updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@test.com'],
             [
                 'name' => 'admin',
                 'password' => '12345678',
                 'email_verified_at' => now(),
                 'is_active' => true,
                 'is_admin' => true,
+            ],
+        );
+
+        $user->profile()->updateOrCreate([], [
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+        ]);
+
+        $user = User::updateOrCreate(
+            ['email' => 'test@test.com'],
+            [
+                'name' => 'test',
+                'password' => '12345678',
+                'email_verified_at' => now(),
+                'is_active' => true,
+                'is_admin' => false,
             ],
         );
 
