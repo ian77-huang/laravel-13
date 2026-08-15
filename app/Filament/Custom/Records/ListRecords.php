@@ -7,7 +7,12 @@ use Filament\Resources\Pages\ListRecords as FilamentListRecords;
 
 abstract class ListRecords extends FilamentListRecords
 {
-    protected static array $transKeys = [];
+    /**
+     * List 頁面的 breadcrumb 翻譯 key。
+     *
+     * @var array{breadcrumb: string}
+     */
+    protected static array $transKeys = ['breadcrumb' => null];
 
     public function getBreadcrumb(): ?string
     {

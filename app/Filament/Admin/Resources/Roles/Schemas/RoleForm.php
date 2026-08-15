@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Roles\Schemas;
 
-use App\Filament\Custom\Components\Components\CheckboxList;
+use App\Filament\Custom\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;

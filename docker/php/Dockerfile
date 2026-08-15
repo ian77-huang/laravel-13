@@ -20,7 +20,7 @@ RUN apt-get update \
     && pecl clear-cache \
     && rm -rf /var/lib/apt/lists/* /tmp/pear
 
-COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/php/opcache.dev.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

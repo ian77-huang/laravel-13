@@ -4,12 +4,18 @@ namespace App\Filament\Custom\Records;
 
 use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord as FilamentCreateRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class CreateRecord extends FilamentCreateRecord
 {
-    protected function setUp(): void
+    public function getBreadcrumb(): string
     {
-        parent::setUp();
+        return __('button.create');
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return __('filament.title.page.create', ['label' => static::getResource()::getTitleCaseModelLabel()]);
     }
 
     protected function getCreateFormAction(): Action

@@ -3,25 +3,19 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
-use App\Filament\Custom\Actions\DeleteAction;
-use App\Filament\Custom\Actions\ViewAction;
 use App\Filament\Custom\Records\EditRecord;
 use App\Services\PermissionService;
+use Illuminate\Contracts\Support\Htmlable;
 use Spatie\Permission\Models\Permission;
 
 class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            ViewAction::make()
-                ->label(__('button.view')),
-            DeleteAction::make()
-                ->label(__('button.delete')),
-        ];
-    }
+    // public function getHeading(): string|Htmlable|null
+    // {
+    //     return '自訂的標題';
+    // }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {

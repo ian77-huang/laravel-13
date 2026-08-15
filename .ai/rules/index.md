@@ -8,11 +8,13 @@ Before planning or editing, find the row whose globs match the file's path and r
 | app/Support/Cache/** | .ai/rules/cache.md |
 | config/cache.php | .ai/rules/config.md |
 | resources/css/** | .ai/rules/css.md |
+| docker/** | .ai/rules/docker.md |
 | docker-compose*.yml, .env, docker-compose.dev.yml | .ai/rules/general.md |
 | app/Http/Middleware/** | .ai/rules/middleware.md |
 | database/migrations/*bible* | .ai/rules/migrations.md |
 | app/Models/Youtube*.php | .ai/rules/models.md |
 | docker/nginx/** | .ai/rules/nginx.md |
+| app/Filament/Admin/Resources/**/Pages/*List*.php | .ai/rules/pages.md |
 | app/Support/** | .ai/rules/support.md |
 | tests/** | .ai/rules/tests.md |
 | resources/views/** | .ai/rules/views.md |
