@@ -2,8 +2,8 @@
 
 namespace App\Filament\Admin\Resources\Users\Tables;
 
-use App\Filament\Components\Actions\EditAction;
-use App\Filament\Components\Actions\ViewAction;
+use App\Filament\Custom\Actions\EditAction;
+use App\Filament\Custom\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;

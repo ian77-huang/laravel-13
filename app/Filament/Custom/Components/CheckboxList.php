@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components;
+namespace App\Filament\Custom\Components\Components;
 
 use Filament\Actions\Action;
 use Filament\Forms\Components\CheckboxList as FilamentCheckboxList;

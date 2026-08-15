@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\YoutubeChannels;
+use App\Models\YoutubeChannel;
 use App\Support\Cache\CacheHub;
 use App\Support\TimeCraft;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,13 +17,13 @@ class YoutubeService
         $cacheKey = constants('Cache_Key_Index_Youtube_Channel_Lists').':'.$number;
 
         return $this->cache->remember($cacheKey, function () use ($number) {
-            $randomIds = YoutubeChannels::query()
+            $randomIds = YoutubeChannel::query()
                 ->where('state', '=', '1')
                 ->pluck('id')
                 ->shuffle()
                 ->take($number);
 
-            return YoutubeChannels::query()
+            return YoutubeChannel::query()
                 ->select(['id', 'title', 'branding', 'image'])
                 ->whereKey($randomIds)
                 ->get();

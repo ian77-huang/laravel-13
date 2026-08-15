@@ -6,9 +6,6 @@ use Illuminate\Support\Collection;
 
 class PermissionService
 {
-    /**
-     * 將使用者的權限集合依據 config 模組分類並去除前綴
-     */
     public function formatPermissionsByModule(Collection $permissions): array
     {
         $formatted = [];

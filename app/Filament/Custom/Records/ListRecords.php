@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Components\Records;
+namespace App\Filament\Custom\Records;
 
-use App\Filament\Components\Actions\CreateAction;
+use App\Filament\Custom\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords as FilamentListRecords;
 
 abstract class ListRecords extends FilamentListRecords
 {
-    abstract public function getCustomBreadcrumb(): ?string;
+    protected static array $transKeys = [];
 
     public function getBreadcrumb(): ?string
     {
-        return $this->getCustomBreadcrumb();
+        return __(static::$transKeys['breadcrumb'] ?? 'Missing Group');
     }
 
     protected function getHeaderActions(): array

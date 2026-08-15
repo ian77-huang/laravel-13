@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\Pages;
 
 use App\Filament\Admin\Resources\Users\UserResource;
-use App\Filament\Components\Records\CreateRecord;
+use App\Filament\Custom\Records\CreateRecord;
 
 class CreateUser extends CreateRecord
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components\Records;
+namespace App\Filament\Custom\Records;
 
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord as FilamentEditRecord;

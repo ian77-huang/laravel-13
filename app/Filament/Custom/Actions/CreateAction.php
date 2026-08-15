@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components\Actions;
+namespace App\Filament\Custom\Actions;
 
 use Filament\Actions\CreateAction as FilamentCreateAction;
 

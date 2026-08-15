@@ -3,9 +3,9 @@
 namespace App\Filament\Admin\Resources\Users\Pages;
 
 use App\Filament\Admin\Resources\Users\UserResource;
-use App\Filament\Components\Actions\DeleteAction;
-use App\Filament\Components\Actions\ViewAction;
-use App\Filament\Components\Records\EditRecord;
+use App\Filament\Custom\Actions\DeleteAction;
+use App\Filament\Custom\Actions\ViewAction;
+use App\Filament\Custom\Records\EditRecord;
 
 class EditUser extends EditRecord
 {
