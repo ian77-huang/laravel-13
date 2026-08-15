@@ -3,10 +3,10 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
+use App\Filament\Components\Actions\DeleteAction;
+use App\Filament\Components\Actions\ViewAction;
+use App\Filament\Components\Records\EditRecord;
 use App\Services\PermissionService;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 use Spatie\Permission\Models\Permission;
 
 class EditRole extends EditRecord

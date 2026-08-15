@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\Pages;
 
 use App\Filament\Admin\Resources\Users\UserResource;
-use Filament\Actions\EditAction;
+use App\Filament\Components\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewUser extends ViewRecord
