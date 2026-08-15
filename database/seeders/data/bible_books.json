@@ -1,462 +1,462 @@
 [
     {
         "name": "創世記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Gen",
         "chapter_count": 50
     },
     {
         "name": "出埃及記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Exo",
         "chapter_count": 40
     },
     {
         "name": "利未記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Lev",
         "chapter_count": 27
     },
     {
         "name": "民數記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Num",
         "chapter_count": 36
     },
     {
         "name": "申命記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Deu",
         "chapter_count": 34
     },
     {
         "name": "約書亞記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Jos",
         "chapter_count": 24
     },
     {
         "name": "士師記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Jdg",
         "chapter_count": 21
     },
     {
         "name": "路得記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Rut",
         "chapter_count": 4
     },
     {
         "name": "撒母耳記上",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "1Sa",
         "chapter_count": 31
     },
     {
         "name": "撒母耳記下",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "2Sa",
         "chapter_count": 24
     },
     {
         "name": "列王紀上",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "1Ki",
         "chapter_count": 22
     },
     {
         "name": "列王紀下",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "2Ki",
         "chapter_count": 25
     },
     {
         "name": "歷代志上",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "1Ch",
         "chapter_count": 29
     },
     {
         "name": "歷代志下",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "2Ch",
         "chapter_count": 36
     },
     {
         "name": "以斯拉記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Ezr",
         "chapter_count": 10
     },
     {
         "name": "尼希米記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Neh",
         "chapter_count": 13
     },
     {
         "name": "以斯帖記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Est",
         "chapter_count": 10
     },
     {
         "name": "約伯記",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Job",
         "chapter_count": 42
     },
     {
         "name": "詩篇",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Psa",
         "chapter_count": 150
     },
     {
         "name": "箴言",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Pro",
         "chapter_count": 31
     },
     {
         "name": "傳道書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Ecc",
         "chapter_count": 12
     },
     {
         "name": "雅歌",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Sng",
         "chapter_count": 8
     },
     {
         "name": "以賽亞書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Isa",
         "chapter_count": 66
     },
     {
         "name": "耶利米書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Jer",
         "chapter_count": 52
     },
     {
         "name": "耶利米哀歌",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Lam",
         "chapter_count": 5
     },
     {
         "name": "以西結書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Eze",
         "chapter_count": 48
     },
     {
         "name": "但以理書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Dan",
         "chapter_count": 12
     },
     {
         "name": "何西阿書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Hos",
         "chapter_count": 14
     },
     {
         "name": "約珥書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Jl",
         "chapter_count": 3
     },
     {
         "name": "阿摩司書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Amo",
         "chapter_count": 9
     },
     {
         "name": "俄巴底亞書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Oba",
         "chapter_count": 1
     },
     {
         "name": "約拿書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Jon",
         "chapter_count": 4
     },
     {
         "name": "彌迦書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Mic",
         "chapter_count": 7
     },
     {
         "name": "那鴻書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Nah",
         "chapter_count": 3
     },
     {
         "name": "哈巴谷書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Hab",
         "chapter_count": 3
     },
     {
         "name": "西番雅書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Zep",
         "chapter_count": 3
     },
     {
         "name": "哈該書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Hag",
         "chapter_count": 2
     },
     {
         "name": "撒迦利亞書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Zec",
         "chapter_count": 14
     },
     {
         "name": "瑪拉基書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "OT",
         "abbreviation": "Mal",
         "chapter_count": 4
     },
     {
         "name": "馬太福音",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Mat",
         "chapter_count": 28
     },
     {
         "name": "馬可福音",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Mrk",
         "chapter_count": 16
     },
     {
         "name": "路加福音",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Luk",
         "chapter_count": 24
     },
     {
         "name": "約翰福音",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Jhn",
         "chapter_count": 21
     },
     {
         "name": "使徒行傳",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Act",
         "chapter_count": 28
     },
     {
         "name": "羅馬書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Rom",
         "chapter_count": 16
     },
     {
         "name": "哥林多前書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "1Co",
         "chapter_count": 16
     },
     {
         "name": "哥林多後書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "2Co",
         "chapter_count": 13
     },
     {
         "name": "加拉太書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Gal",
         "chapter_count": 6
     },
     {
         "name": "以弗所書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Eph",
         "chapter_count": 6
     },
     {
         "name": "腓立比書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Php",
         "chapter_count": 4
     },
     {
         "name": "歌羅西書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Col",
         "chapter_count": 4
     },
     {
         "name": "帖撒羅尼迦前書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "1Th",
         "chapter_count": 5
     },
     {
         "name": "帖撒羅尼迦後書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "2Th",
         "chapter_count": 3
     },
     {
         "name": "提摩太前書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "1Ti",
         "chapter_count": 6
     },
     {
         "name": "提摩太後書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "2Ti",
         "chapter_count": 4
     },
     {
         "name": "提多書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Tit",
         "chapter_count": 3
     },
     {
         "name": "腓利門書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Phm",
         "chapter_count": 1
     },
     {
         "name": "希伯來書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Heb",
         "chapter_count": 13
     },
     {
         "name": "雅各書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Jas",
         "chapter_count": 5
     },
     {
         "name": "彼得前書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "1Pe",
         "chapter_count": 5
     },
     {
         "name": "彼得後書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "2Pe",
         "chapter_count": 3
     },
     {
         "name": "約翰一書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "1Jn",
         "chapter_count": 5
     },
     {
         "name": "約翰二書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "2Jn",
         "chapter_count": 1
     },
     {
         "name": "約翰三書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "3Jn",
         "chapter_count": 1
     },
     {
         "name": "猶大書",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Jud",
         "chapter_count": 1
     },
     {
         "name": "啟示錄",
-        "language": "zh-TW",
+        "language": "zh_TW",
         "testament": "NT",
         "abbreviation": "Rev",
         "chapter_count": 22

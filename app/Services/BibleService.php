@@ -25,7 +25,7 @@ class BibleService
      *     AND bible_books.language = bible_verses.language
      *   WHERE bible_verse_refs.id = $refId AND bible_verses.language = $language
      */
-    public function findVerseByToday(string $language = 'zh-TW'): ?stdClass
+    public function findVerseByToday(string $language = 'zh_TW'): ?stdClass
     {
         $cacheKey = constants('Cache_Key_Index_Bible').':'.$language;
         $seconds = TimeCraft::toMidnightSeconds();

@@ -10,6 +10,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/css/** | .ai/rules/css.md |
 | docker/** | .ai/rules/docker.md |
 | docker-compose*.yml, .env, docker-compose.dev.yml | .ai/rules/general.md |
+| lang/** | .ai/rules/lang.md |
 | app/Http/Middleware/** | .ai/rules/middleware.md |
 | database/migrations/*bible* | .ai/rules/migrations.md |
 | app/Models/Youtube*.php | .ai/rules/models.md |

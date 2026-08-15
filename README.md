@@ -7,12 +7,12 @@ Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試�
 
 首頁（`/`）目前包含兩個區塊：
 
-- **每日經文**：`BibleService::findVerseByToday('zh-TW')` 以日期為種子隨機挑選一節經文，快取至當天午夜。
+- **每日經文**：`BibleService::findVerseByToday('zh_TW')` 以日期為種子隨機挑選一節經文，快取至當天午夜。
 - **YouTube 頻道**：`YoutubeService::getChannels()` 隨機取 6 個啟用頻道，以卡片網格呈現；圖片經 `x-img` 元件（`x-lazy` directive）使用 IntersectionObserver 延遲載入。
 
 ### 功能特色
 
-- **多語系切換**：`zh-TW` / `en`，透過 navbar 的 `x-locale-switcher`（Alpine `localeSwitcher` component）呼叫 `POST /api/lang`，`SetLocale` middleware 依 `locale` cookie 套用白名單語系（`config/app.php` 的 `available_locales`）。
+- **多語系切換**：`zh_TW` / `en`，透過 navbar 的 `x-locale-switcher`（Alpine `localeSwitcher` component）呼叫 `POST /api/lang`，`SetLocale` middleware 依 `locale` cookie 套用白名單語系（`config/app.php` 的 `available_locales`）。
 - **Blade 元件**：自訂 `x-card`、`x-fieldset`、`x-img`、`x-icon.*`（brands/solid）、`x-locale-switcher`、`x-layouts.mc`、`x-layouts.*`。
 - **快取**：memcached（`CACHE_STORE=memcached`），`CacheHub` 封裝，cache key 集中於 `config/constants.php`。
 - **Octane 並行**：`IndexController` 以 `Octane::concurrently()` 同時抓取經文與頻道。
