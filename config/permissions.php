@@ -23,11 +23,11 @@ function createActions(?array $action = null): array
 
 return [
     'modules' => [
-        'user' => 'permission.modules.user',
-        'role' => 'permission.modules.role',
+        'users' => 'permission.modules.user',
+        'roles' => 'permission.modules.role',
     ],
     'actions' => [
-        'user' => createActions(),
-        'role' => createActions(),
+        'users' => createActions(),
+        'roles' => createActions(),
     ],
 ];
