@@ -2,6 +2,7 @@
 
 return [
     'create' => 'New',
+    'create_and_create_another' => 'Create & create another',
     'edit' => 'Edit',
     'delete' => 'Delete',
     'view' => 'View',

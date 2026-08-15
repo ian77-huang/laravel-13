@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Components\Records\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
