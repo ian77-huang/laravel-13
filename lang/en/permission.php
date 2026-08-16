@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => 'permission',
     'modules' => [
         'user' => 'User',
     ],

@@ -10,4 +10,5 @@ return [
     'cancel' => '取消',
     'select_all' => '全選',
     'deselect_all' => '取消全選',
+    'user.permission' => '權限',
 ];

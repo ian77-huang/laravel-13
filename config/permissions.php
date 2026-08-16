@@ -30,4 +30,8 @@ return [
         'users' => createActions(),
         'roles' => createActions(),
     ],
+    'guards' => [
+        'users' => 'web',
+        'roles' => 'web',
+    ],
 ];

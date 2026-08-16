@@ -10,4 +10,5 @@ return [
     'cancel' => 'Cancel',
     'select_all' => 'Select All',
     'deselect_all' => 'Deselect All',
+    'user.permission' => 'permission',
 ];

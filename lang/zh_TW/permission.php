@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => '權限',
     'modules' => [
         'user' => '使用者',
         'role' => '角色',
