@@ -2,16 +2,19 @@
 
 function createAction(string $key, string $value): array
 {
-    return ['key' => $key, 'value' => $value];
+    $actions = [];
+    $actions[$key] = ['key' => $key, 'value' => $value];
+
+    return $actions;
 }
 
 function createActions(?array $action = null): array
 {
     $actions = [
-        createAction('view', 'permission.actions.view'),
-        createAction('create', 'permission.actions.create'),
-        createAction('edit', 'permission.actions.edit'),
-        createAction('delete', 'permission.actions.delete'),
+        ...createAction('view', 'permission.actions.view'),
+        ...createAction('create', 'permission.actions.create'),
+        ...createAction('edit', 'permission.actions.edit'),
+        ...createAction('delete', 'permission.actions.delete'),
     ];
 
     if ($action && is_array($action)) {
@@ -31,7 +34,8 @@ return [
         'roles' => createActions(),
     ],
     'guards' => [
-        'users' => 'web',
-        'roles' => 'web',
+        'web' => [],
+        'admin' => ['users', 'roles'],
+        'api' => [],
     ],
 ];

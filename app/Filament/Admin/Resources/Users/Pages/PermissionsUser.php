@@ -45,37 +45,37 @@ class PermissionsUser extends EditBaseRecord
                 ->bulkToggleable()
                 ->gridDirection(GridDirection::Row);
             $sectionRoles[] = Section::make('Section.'.$keyRole)
-                ->statePath('Roles')
+                ->statePath('roles')
                 ->columns(1)
                 ->columnSpanFull()
                 ->schema([$checkboxRoles]);
         }
 
-        foreach ($premissionSevice->formatPermissionsByGuard() as $guardKey => $guards) {
+        // foreach ($premissionSevice->formatPermissionsByGuard() as $guardKey => $guards) {
 
-            $checkboxLists = [];
-            foreach ($guards['modules'] as $keyModule => $valModule) {
-                $checkboxLists[] = CheckboxList::make($keyModule)
-                    ->label(__($valModule))
-                    ->options(
-                        fn (): array => collect(config('permissions.actions')[$keyModule])
-                            ->mapWithKeys(
-                                fn (array $action): array => [$action['key'] => __($action['value'])],
-                            )
-                            ->toArray(),
-                    )
-                    ->columns(4)
-                    ->bulkToggleable()
-                    ->gridDirection(GridDirection::Row);
-            }
+        //     $checkboxLists = [];
+        //     foreach ($guards['modules'] as $keyModule => $valModule) {
+        //         $checkboxLists[] = CheckboxList::make($keyModule)
+        //             ->label(__($valModule))
+        //             ->options(
+        //                 fn (): array => collect(config('permissions.actions')[$keyModule])
+        //                     ->mapWithKeys(
+        //                         fn (array $action): array => [$action['key'] => __($action['value'])],
+        //                     )
+        //                     ->toArray(),
+        //             )
+        //             ->columns(4)
+        //             ->bulkToggleable()
+        //             ->gridDirection(GridDirection::Row);
+        //     }
 
-            $sectionPermissions[] = Section::make($guardKey)
-                ->statePath($guardKey)
-                ->columns(2)
-                ->columnSpanFull()
-                ->schema([...$checkboxLists]);
+        //     $sectionPermissions[] = Section::make($guardKey)
+        //         ->statePath($guardKey)
+        //         ->columns(2)
+        //         ->columnSpanFull()
+        //         ->schema([...$checkboxLists]);
 
-        }
+        // }
 
         return $schema
             ->components([
@@ -106,8 +106,17 @@ class PermissionsUser extends EditBaseRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $keyRoles => $role) {
+
+            }
+
+        }
+        $configPermissions = config('permissions');
+        $guards = array_values($configPermissions['guards']);
         echo '<pre>';
-        var_dump($data);
+        var_dump($guards, $data);
         echo '</pre>';
         exit;
         // $guardName = config('permission.defaults.guard', 'web');

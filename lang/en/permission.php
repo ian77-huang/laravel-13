@@ -16,4 +16,10 @@ return [
         'edit' => 'Edit',
         'delete' => 'Delete',
     ],
+    'guard' => 'Guards',
+    'guards' => [
+        'web' => 'Frontend(web)',
+        'admin' => 'Backend(admin)',
+        'api' => 'Api(api)',
+    ],
 ];

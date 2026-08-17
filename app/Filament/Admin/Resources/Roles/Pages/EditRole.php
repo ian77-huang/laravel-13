@@ -3,56 +3,64 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
+use App\Filament\Admin\Resources\Roles\Supports\Support;
 use App\Filament\Custom\Records\EditRecord;
-use App\Services\PermissionService;
-use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
 
-    // public function getHeading(): string|Htmlable|null
-    // {
-    //     return '自訂的標題';
-    // }
-
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $guardName = $data['guard_name'] ?? $this->record->guard_name ?? 'web';
+        return Support::checkRoleData($data);
+    }
 
-        $permissions = [];
-        foreach ($data as $module => $actions) {
-            if (in_array($module, ['name', 'guard_name']) || ! is_array($actions)) {
-                continue;
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        return DB::transaction(function () use ($record, $data) {
+            $guardName = $record->guard_name;
+            $guardPermissions = $data['permissions'][$guardName] ?? [];
+
+            $permissions = [];
+
+            foreach ($guardPermissions as $module => $actions) {
+                foreach ($actions as $action) {
+                    $permissionName = "{$module}.{$action}";
+
+                    $permission = Permission::firstOrCreate([
+                        'name' => $permissionName,
+                        'guard_name' => $guardName,
+                    ]);
+
+                    $permissions[] = $permission;
+                }
             }
 
-            foreach ($actions as $action) {
-                $permissionName = "{$module}.{$action}";
+            $record->syncPermissions($permissions);
 
-                Permission::firstOrCreate([
-                    'name' => $permissionName,
-                    'guard_name' => $guardName,
-                ]);
+            // Delete orphaned permissions for this guard
+            $usedPermissionIds = DB::table('role_has_permissions')
+                ->pluck('permission_id');
 
-                $permissions[] = $permissionName;
-            }
-        }
+            Permission::where('guard_name', $guardName)
+                ->whereNotIn('id', $usedPermissionIds)
+                ->delete();
 
-        $this->record->syncPermissions($permissions);
-
-        foreach (array_keys(config('permissions.modules')) as $module) {
-            unset($data[$module]);
-        }
-
-        return $data;
+            return $record;
+        });
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $modulePermissions = app(PermissionService::class)
-            ->formatPermissionsByModule($this->record->permissions);
+        return Support::formatPermissionsForForm($data, $this->record);
+    }
 
-        return array_merge($data, $modulePermissions);
+    protected function afterSave(): void
+    {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

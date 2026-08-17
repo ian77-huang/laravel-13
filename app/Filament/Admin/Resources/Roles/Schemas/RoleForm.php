@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\Roles\Schemas;
 
 use App\Filament\Custom\Components\CheckboxList;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\GridDirection;
@@ -14,24 +14,41 @@ class RoleForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $checkboxList = [];
-
+        $guards = config('permissions.guards');
         $modules = config('permissions.modules');
         $actions = config('permissions.actions');
 
-        foreach ($modules as $moduleKey => $module) {
-            array_push($checkboxList, CheckboxList::make($moduleKey)
-                ->label(__($module))
-                ->options(
-                    fn (): array => collect($actions[$moduleKey])
-                        ->mapWithKeys(
-                            fn (array $action): array => [$action['key'] => __($action['value'])],
-                        )
-                        ->toArray(),
-                )
-                ->columns(4)
-                ->bulkToggleable()
-                ->gridDirection(GridDirection::Row));
+        $sections = [];
+
+        foreach ($guards as $keyGuards => $guardModules) {
+            if (count($guardModules) === 0) {
+                continue;
+            }
+
+            $checkboxList = [];
+            foreach ($guardModules as $module) {
+                if (! isset($modules[$module])) {
+                    continue;
+                }
+
+                $checkboxList[] = CheckboxList::make($module)
+                    ->label(__($modules[$module]))
+                    ->options(
+                        fn (): array => collect($actions[$module])
+                            ->mapWithKeys(
+                                fn (array $action): array => [$action['key'] => __($action['value'])],
+                            )
+                            ->toArray(),
+                    )
+                    ->columns(4)
+                    ->bulkToggleable()
+                    ->gridDirection(GridDirection::Row);
+            }
+            $sections[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$keyGuards))
+                ->statePath($keyGuards)
+                ->columns(2)
+                ->columnSpanFull()
+                ->schema([...$checkboxList]);
         }
 
         return $schema
@@ -47,19 +64,13 @@ class RoleForm
                             'guard_name',
                             request()->input('data.guard_name', 'web'),
                         ),
-                    ),
-                Select::make('guard_name')
-                    ->label(__('permission.navigation.permission'))
-                    ->options(fn (): array => array_combine(
-                        array_keys(config('auth.guards')),
-                        array_keys(config('auth.guards')),
-                    ))
-                    ->default('web')
-                    ->required(),
-                Section::make(__('permission.navigation.permission'))
-                    ->columns(2)
+                    )
+                    ->columnSpanFull(),
+                Group::make()
+                    ->statePath('permissions')
+                    ->columns(1)
                     ->columnSpanFull()
-                    ->schema([...$checkboxList]),
+                    ->schema($sections),
             ]);
     }
 }

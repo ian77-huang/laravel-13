@@ -4,7 +4,7 @@ namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Filament\Custom\Records\ViewRecord;
-use App\Services\PermissionService;
+use App\Filament\Admin\Resources\Roles\Supports\Support;
 
 class ViewRole extends ViewRecord
 {
@@ -12,9 +12,6 @@ class ViewRole extends ViewRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $modulePermissions = app(PermissionService::class)
-            ->formatPermissionsByModule($this->record->permissions);
-
-        return array_merge($data, $modulePermissions);
+        return Support::formatPermissionsForForm($data, $this->record);
     }
 }

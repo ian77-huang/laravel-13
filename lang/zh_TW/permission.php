@@ -17,4 +17,10 @@ return [
         'edit' => '編輯',
         'delete' => '刪除',
     ],
+    'guard' => '作用區',
+    'guards' => [
+        'web' => '前台(web)',
+        'admin' => '後台(admin)',
+        'api' => '應用程式介面(api)',
+    ],
 ];
