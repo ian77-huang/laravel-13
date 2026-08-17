@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
-use App\Filament\Admin\Resources\Roles\Supports\Support;
 use App\Filament\Custom\Records\CreateRecord;
+use App\Services\PermissionService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -17,7 +17,7 @@ class CreateRole extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return Support::checkRoleData($data);
+        return app(PermissionService::class)->validRoleData($data);
     }
 
     protected function handleRecordCreation(array $data): Model

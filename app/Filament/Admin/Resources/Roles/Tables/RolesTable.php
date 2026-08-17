@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources\Roles\Tables;
 
-use App\Filament\Admin\Resources\Roles\Supports\Support;
 use App\Filament\Custom\Actions\EditAction;
 use App\Filament\Custom\Actions\ViewAction;
+use App\Services\PermissionService;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
@@ -52,7 +52,7 @@ class RolesTable
                                 $records->each->delete();
 
                                 foreach ($guardNames as $guardName) {
-                                    Support::cleanupOrphanedPermissions($guardName);
+                                    app(PermissionService::class)->cleanupOrphanedPermissions($guardName);
                                 }
                             });
 

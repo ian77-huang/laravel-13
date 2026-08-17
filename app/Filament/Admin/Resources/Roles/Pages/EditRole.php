@@ -3,9 +3,9 @@
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
-use App\Filament\Admin\Resources\Roles\Supports\Support;
 use App\Filament\Custom\Actions\ViewAction;
 use App\Filament\Custom\Records\EditRecord;
+use App\Services\PermissionService;
 use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +29,7 @@ class EditRole extends EditRecord
 
                     DB::transaction(function () use ($guardName) {
                         $this->record->delete();
-                        Support::cleanupOrphanedPermissions($guardName);
+                        app(PermissionService::class)->cleanupOrphanedPermissions($guardName);
                     });
 
                     app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -41,7 +41,7 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        return Support::checkRoleData($data);
+        return app(PermissionService::class)->validRoleData($data);
     }
 
     protected function handleRecordUpdate(Model $record, array $data): Model
@@ -67,7 +67,7 @@ class EditRole extends EditRecord
 
             $record->syncPermissions($permissions);
 
-            Support::cleanupOrphanedPermissions($guardName);
+            app(PermissionService::class)->cleanupOrphanedPermissions($guardName);
 
             return $record;
         });
@@ -75,7 +75,7 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        return Support::formatPermissionsForForm($data, $this->record);
+        return app(PermissionService::class)->formatPermissionsForForm($data, $this->record);
     }
 
     protected function afterSave(): void

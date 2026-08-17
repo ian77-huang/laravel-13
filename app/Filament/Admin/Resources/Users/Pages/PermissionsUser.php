@@ -32,7 +32,7 @@ class PermissionsUser extends EditBaseRecord
         $sectionPermissions = [];
 
         foreach ($premissionSevice->getRoles() as $keyRole => $roles) {
-            $checkboxRoles = CheckboxList::make($keyRole)
+            $checkboxRoles = CheckboxList::make('')
                 ->label('')
                 ->options(
                     fn (): array => collect($roles)
@@ -44,13 +44,16 @@ class PermissionsUser extends EditBaseRecord
                 ->columns(4)
                 ->bulkToggleable()
                 ->gridDirection(GridDirection::Row);
-            $sectionRoles[] = Section::make('Section.'.$keyRole)
+            $sectionRoles[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$keyRole))
                 ->statePath('roles')
                 ->columns(1)
                 ->columnSpanFull()
                 ->schema([$checkboxRoles]);
         }
-
+        echo '<pre>';
+        var_dump(1, $premissionSevice->formatPermissionsByGuard());
+        echo '</pre>';
+        exit;
         // foreach ($premissionSevice->formatPermissionsByGuard() as $guardKey => $guards) {
 
         //     $checkboxLists = [];
