@@ -4,7 +4,9 @@ namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Filament\Admin\Resources\Roles\Supports\Support;
+use App\Filament\Custom\Actions\ViewAction;
 use App\Filament\Custom\Records\EditRecord;
+use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -13,6 +15,30 @@ use Spatie\Permission\PermissionRegistrar;
 class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ViewAction::make()
+                ->label(__('button.view')),
+            Action::make('delete')
+                ->label(__('button.delete'))
+                ->requiresConfirmation()
+                ->action(function (): void {
+                    $guardName = $this->record->guard_name;
+                    $roleId = $this->record->id;
+
+                    DB::transaction(function () use ($roleId, $guardName) {
+                        DB::table('roles')->where('id', $roleId)->delete();
+                        Support::cleanupOrphanedPermissions($guardName);
+                    });
+
+                    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+                    $this->redirect(route('filament.admin.resources.roles.index'));
+                }),
+        ];
+    }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
@@ -42,13 +68,7 @@ class EditRole extends EditRecord
 
             $record->syncPermissions($permissions);
 
-            // Delete orphaned permissions for this guard
-            $usedPermissionIds = DB::table('role_has_permissions')
-                ->pluck('permission_id');
-
-            Permission::where('guard_name', $guardName)
-                ->whereNotIn('id', $usedPermissionIds)
-                ->delete();
+            Support::cleanupOrphanedPermissions($guardName);
 
             return $record;
         });

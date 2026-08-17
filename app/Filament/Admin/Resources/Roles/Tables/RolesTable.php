@@ -2,12 +2,15 @@
 
 namespace App\Filament\Admin\Resources\Roles\Tables;
 
+use App\Filament\Admin\Resources\Roles\Supports\Support;
 use App\Filament\Custom\Actions\EditAction;
 use App\Filament\Custom\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolesTable
 {
@@ -41,7 +44,21 @@ class RolesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->label(__('button.delete')),
+                        ->label(__('button.delete'))
+                        ->action(function ($records): void {
+                            $guardNames = $records->pluck('guard_name')->unique()->values()->all();
+                            $roleIds = $records->pluck('id')->all();
+
+                            DB::transaction(function () use ($roleIds, $guardNames) {
+                                DB::table('roles')->whereIn('id', $roleIds)->delete();
+
+                                foreach ($guardNames as $guardName) {
+                                    Support::cleanupOrphanedPermissions($guardName);
+                                }
+                            });
+
+                            app(PermissionRegistrar::class)->forgetCachedPermissions();
+                        }),
                 ]),
             ]);
     }
