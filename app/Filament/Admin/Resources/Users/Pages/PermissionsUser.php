@@ -13,6 +13,8 @@ use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\GridDirection;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionsUser extends EditBaseRecord
 {
@@ -104,10 +106,17 @@ class PermissionsUser extends EditBaseRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $modulePermissions = app(PermissionService::class)
-            ->formatPermissionsByModule($this->record->permissions);
+        $permissionService = app(PermissionService::class);
 
-        return array_merge($data, $modulePermissions);
+        $data = $permissionService->formatPermissionsForForm($data, $this->record);
+
+        $rolesByGuard = [];
+        foreach ($this->record->roles as $role) {
+            $rolesByGuard[$role->guard_name][] = $role->name;
+        }
+        $data['roles'] = $rolesByGuard;
+
+        return $data;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
@@ -117,6 +126,48 @@ class PermissionsUser extends EditBaseRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        $roles = [];
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $guard => $guardRoles) {
+                if (! is_array($guardRoles)) {
+                    continue;
+                }
+                foreach ($guardRoles as $roleName) {
+                    $role = Role::findByName($roleName, $guard);
+                    if ($role) {
+                        $roles[] = $role;
+                    }
+                }
+            }
+        }
+        $record->syncRoles($roles);
+
+        $permissions = [];
+        if (isset($data['permissions'])) {
+            foreach ($data['permissions'] as $guard => $modules) {
+                if (! is_array($modules)) {
+                    continue;
+                }
+                foreach ($modules as $module => $actions) {
+                    if (! is_array($actions)) {
+                        continue;
+                    }
+                    foreach ($actions as $action) {
+                        $permission = Permission::findByName("{$module}.{$action}", $guard);
+                        if ($permission) {
+                            $permissions[] = $permission;
+                        }
+                    }
+                }
+            }
+        }
+        $record->syncPermissions($permissions);
+
+        unset($data['roles'], $data['permissions']);
+
+        $record->fill($data);
+        $record->save();
+
         return $record;
     }
 }

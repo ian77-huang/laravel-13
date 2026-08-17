@@ -28,7 +28,53 @@ Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試�
 
 - `bible_*`：聖經（`bible_books`、`bible_verse_refs`、`bible_verses`，多語經文）。
 - `youtube_*`：YouTube 頻道 / 播放清單 / 影片資料。
+- `roles`、`permissions`、`model_has_roles`、`model_has_permissions`、`role_has_permissions`：Spatie Permission 多角色權限管理。
 - Seeder：`php artisan db:seed` 填入測試資料（經文、頻道等）。
+
+## Filament 管理後台
+
+使用 Filament v5 建立管理後台，路由位於 `/admin`。
+
+### 權限管理系統
+
+基於 Spatie Laravel Permission 實作多 guard 權限管理：
+
+- **Guard**：`web`、`admin`、`api`
+- **Modules**：`users`、`roles`（定義於 `config/permissions.php`）
+- **Actions**：`view`、`create`、`edit`、`delete`
+
+#### 權限頁面（PermissionsUser）
+
+位置：`app/Filament/Admin/Resources/Users/Pages/PermissionsUser.php`
+
+- 使用 `Filament\Schemas\Components\Fieldset` 分組 roles 和 permissions
+- 每個 guard 獨立一個 Section，內含 `CheckboxList` 供勾選
+- `mutateFormDataBeforeFill`：從 DB 讀取使用者的角色和權限，按 guard 分組填入表單
+- `mutateFormDataBeforeSave`：透過 `PermissionService` 驗證角色和權限是否存在於 DB
+- `handleRecordUpdate`：使用 `Role::findByName()` 和 `Permission::findByName()` 取得 model 實例後執行 `syncRoles()` / `syncPermissions()`
+
+#### PermissionService
+
+位置：`app/Services/PermissionService.php`
+
+- `getRoles()`：從 DB 取得所有角色，按 guard 分組
+- `formatPermissionsByGuard()`：依 config 定義的 guards 和 modules 格式化權限結構
+- `formatPermissionsByModule()`：將使用者權限依 module 分組
+- `formatPermissionsForForm()`：將使用者權限按 guard 分組，供表單填入
+- `validRoles()`：驗證角色是否存在於對應 guard 的 DB 中，不存在則丟 `Halt` 異常
+- `validPermissions()`：驗證權限是否符合 config 定義，不存在則丟 `Halt` 異常
+- `validUserData()`：整合角色和權限驗證，保留其他表單欄位
+
+#### 刪除使用者時的關聯清理
+
+Spatie `HasRoles` trait 內建 `bootHasRoles()` 和 `bootHasPermissions()`，在 `deleting` 事件中自動執行 `detach()`，清除 `model_has_roles` 和 `model_has_permissions` 的關聯資料，無需額外處理。
+
+#### 自訂 Blade 元件
+
+- `resources/views/filament/components/title.blade.php`：標題元件（使用行內 style，因 Filament 面板未載入自訂 Tailwind CSS）
+- `resources/views/filament/components/divider.blade.php`：分隔線元件（使用行內 style）
+
+> **注意**：Filament 面板使用自己的 CSS 編譯流程，不會載入 `resources/css/app.css`。若需在 Filament 面板中使用自訂 Tailwind utility classes，需透過 `php artisan make:filament-theme` 建立自訂主題。
 
 ## 環境需求
 

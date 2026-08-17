@@ -73,7 +73,6 @@ class PermissionService
     public function validRoles(array $data): array
     {
         $valid = [];
-        $defaultRoles = $this->getRoles();
 
         foreach ($data as $guard => $roles) {
             if (! isset($valid[$guard])) {
@@ -82,11 +81,12 @@ class PermissionService
             if (count($roles) === 0) {
                 continue;
             }
+            $validRoleNames = Role::where('guard_name', $guard)->pluck('name')->toArray();
             foreach ($roles as $role) {
-                $exists = collect($defaultRoles[$guard])->contains('name', 'super_admin');
-                if ($exists) {
-                    $valid[$guard][] = $role;
+                if (! in_array($role, $validRoleNames)) {
+                    throw new Halt("Role `{$role}` not found in guard `{$guard}`.");
                 }
+                $valid[$guard][] = $role;
             }
         }
 
@@ -110,33 +110,34 @@ class PermissionService
 
     public function validUserData(array $data): array
     {
-        $validData = [];
+        $validData = $data;
 
-        if (! isset($data['roles'])) {
-            throw new Halt('Permissions are required.');
+        if (isset($data['roles'])) {
+            $validData['roles'] = $this->validRoles($data['roles']);
         }
-        $validData['roles'] = $this->validRoles($data['roles']);
 
-        if (! isset($data['permissions'])) {
-            throw new Halt('Permissions are required.');
+        if (isset($data['permissions'])) {
+            $validData['permissions'] = $this->validPermissions($data['permissions']);
         }
-        $validData['permissions'] = $this->validPermissions($data['permissions']);
-
-        echo '<pre>';
-        var_dump(1, $validData);
-        echo '</pre>';
-        exit;
 
         return $validData;
     }
 
     public function formatPermissionsForForm(array $data, Model $record): array
     {
-        $modulePermissions = $this->formatPermissionsByModule($record->permissions);
+        $permissionsByGuard = [];
 
-        $data['permissions'] = [
-            $record->guard_name => $modulePermissions,
-        ];
+        foreach ($record->permissions as $permission) {
+            $guard = $permission->guard_name;
+            if (! isset($permissionsByGuard[$guard])) {
+                $permissionsByGuard[$guard] = [];
+            }
+            $module = explode('.', $permission->name)[0];
+            $action = explode('.', $permission->name)[1] ?? $permission->name;
+            $permissionsByGuard[$guard][$module][] = $action;
+        }
+
+        $data['permissions'] = $permissionsByGuard;
 
         return $data;
     }
