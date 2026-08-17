@@ -70,6 +70,29 @@ class PermissionService
         return $validPermissions;
     }
 
+    public function validRoles(array $data): array
+    {
+        $valid = [];
+        $defaultRoles = $this->getRoles();
+
+        foreach ($data as $guard => $roles) {
+            if (! isset($valid[$guard])) {
+                $valid[$guard] = [];
+            }
+            if (count($roles) === 0) {
+                continue;
+            }
+            foreach ($roles as $role) {
+                $exists = collect($defaultRoles[$guard])->contains('name', 'super_admin');
+                if ($exists) {
+                    $valid[$guard][] = $role;
+                }
+            }
+        }
+
+        return $valid;
+    }
+
     public function validRoleData(array $data): array
     {
         $validData = [];
@@ -81,6 +104,28 @@ class PermissionService
             throw new Halt('Permissions are required.');
         }
         $validData['permissions'] = $this->validPermissions($data['permissions']);
+
+        return $validData;
+    }
+
+    public function validUserData(array $data): array
+    {
+        $validData = [];
+
+        if (! isset($data['roles'])) {
+            throw new Halt('Permissions are required.');
+        }
+        $validData['roles'] = $this->validRoles($data['roles']);
+
+        if (! isset($data['permissions'])) {
+            throw new Halt('Permissions are required.');
+        }
+        $validData['permissions'] = $this->validPermissions($data['permissions']);
+
+        echo '<pre>';
+        var_dump(1, $validData);
+        echo '</pre>';
+        exit;
 
         return $validData;
     }
@@ -119,24 +164,31 @@ class PermissionService
 
     public function formatPermissionsByGuard(): array
     {
-        $configModules = config('permissions');
+        [$configGuards, $configModules, $configActions] = $this->getPermissions();
 
         $permissions = [];
 
-        foreach ($configModules['guards'] as $module => $guard) {
-            if (! isset($permissions[$guard])) {
-                $permissions[$guard] = [];
+        foreach ($configGuards as $guard => $modules) {
+            if (count($modules) === 0) {
+                continue;
+            }
+            if (! isset($permission[$guard])) {
+                $permission[$guard] = [];
                 $permissions[$guard]['modules'] = [];
                 $permissions[$guard]['actions'] = [];
             }
-            if (! isset($configModules['modules'][$module])) {
-                throw new Halt("can't fined permissions for ".$module.' setting.');
+            foreach ($modules as $module) {
+                if (! isset($configModules[$module])) {
+                    throw new Halt("can't fined permissions for ".$module.' setting.');
+                }
+                if (! isset($configActions[$module])) {
+
+                    throw new Halt("can't fined permissions actions for ".$module.' setting.');
+                }
+
+                $permissions[$guard]['modules'][$module] = $configModules[$module];
+                $permissions[$guard]['actions'][$module] = $configActions[$module];
             }
-            if (! isset($configModules['actions'][$module])) {
-                throw new Halt("can't fined permissions actions for ".$module.' setting.');
-            }
-            $permissions[$guard]['modules'][$module] = $configModules['modules'][$module];
-            $permissions[$guard]['actions'][$module] = $configModules['actions'][$module];
         }
 
         return $permissions;

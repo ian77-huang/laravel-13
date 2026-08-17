@@ -6,12 +6,13 @@ use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Components\CheckboxList;
 use App\Filament\Custom\Records\EditBaseRecord;
 use App\Services\PermissionService;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\GridDirection;
+use Illuminate\Database\Eloquent\Model;
 
 class PermissionsUser extends EditBaseRecord
 {
@@ -32,7 +33,7 @@ class PermissionsUser extends EditBaseRecord
         $sectionPermissions = [];
 
         foreach ($premissionSevice->getRoles() as $keyRole => $roles) {
-            $checkboxRoles = CheckboxList::make('')
+            $checkboxRoles = CheckboxList::make($keyRole)
                 ->label('')
                 ->options(
                     fn (): array => collect($roles)
@@ -45,57 +46,59 @@ class PermissionsUser extends EditBaseRecord
                 ->bulkToggleable()
                 ->gridDirection(GridDirection::Row);
             $sectionRoles[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$keyRole))
-                ->statePath('roles')
                 ->columns(1)
                 ->columnSpanFull()
                 ->schema([$checkboxRoles]);
         }
-        echo '<pre>';
-        var_dump(1, $premissionSevice->formatPermissionsByGuard());
-        echo '</pre>';
-        exit;
-        // foreach ($premissionSevice->formatPermissionsByGuard() as $guardKey => $guards) {
-
-        //     $checkboxLists = [];
-        //     foreach ($guards['modules'] as $keyModule => $valModule) {
-        //         $checkboxLists[] = CheckboxList::make($keyModule)
-        //             ->label(__($valModule))
-        //             ->options(
-        //                 fn (): array => collect(config('permissions.actions')[$keyModule])
-        //                     ->mapWithKeys(
-        //                         fn (array $action): array => [$action['key'] => __($action['value'])],
-        //                     )
-        //                     ->toArray(),
-        //             )
-        //             ->columns(4)
-        //             ->bulkToggleable()
-        //             ->gridDirection(GridDirection::Row);
-        //     }
-
-        //     $sectionPermissions[] = Section::make($guardKey)
-        //         ->statePath($guardKey)
-        //         ->columns(2)
-        //         ->columnSpanFull()
-        //         ->schema([...$checkboxLists]);
-
-        // }
+        foreach ($premissionSevice->formatPermissionsByGuard() as $guardKey => $guards) {
+            $checkboxLists = [];
+            foreach ($guards['modules'] as $keyModule => $valModule) {
+                $checkboxLists[] = CheckboxList::make($keyModule)
+                    ->label(__($valModule))
+                    ->options(
+                        fn (): array => collect(config('permissions.actions')[$keyModule])
+                            ->mapWithKeys(
+                                fn (array $action): array => [$action['key'] => __($action['value'])],
+                            )
+                            ->toArray(),
+                    )
+                    ->columns(4)
+                    ->bulkToggleable()
+                    ->gridDirection(GridDirection::Row);
+            }
+            $sectionPermissions[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$guardKey))
+                ->statePath($guardKey)
+                ->columns(2)
+                ->columnSpanFull()
+                ->schema([...$checkboxLists]);
+        }
 
         return $schema
             ->components([
-                Tabs::make('Tabs')
-                    ->tabs([
-                        Tab::make('Roles')
+                Fieldset::make('roles')
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->schema([
+                        Group::make()
+                            ->statePath('roles')
                             ->schema([
                                 ...$sectionRoles,
-                            ]),
-                        Tab::make('Permissions')
-                            ->schema([
-                                Group::make()
-                                    ->statePath('permissions')
-                                    ->components($sectionPermissions),
-                            ]),
-                    ])
+                            ])
+                            ->columnSpanFull(),
+                    ]),
+                View::make('filament.components.divider')
                     ->columnSpanFull(),
+                Fieldset::make('permissions')
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->schema([
+                        Group::make()
+                            ->statePath('permissions')
+                            ->schema([
+                                ...$sectionPermissions,
+                            ])
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -109,45 +112,11 @@ class PermissionsUser extends EditBaseRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        return app(PermissionService::class)->validUserData($data);
+    }
 
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $keyRoles => $role) {
-
-            }
-
-        }
-        $configPermissions = config('permissions');
-        $guards = array_values($configPermissions['guards']);
-        echo '<pre>';
-        var_dump($guards, $data);
-        echo '</pre>';
-        exit;
-        // $guardName = config('permission.defaults.guard', 'web');
-
-        // $permissions = [];
-        // foreach ($data as $module => $actions) {
-        //     if (! is_array($actions)) {
-        //         continue;
-        //     }
-
-        //     foreach ($actions as $action) {
-        //         $permissionName = "{$module}.{$action}";
-
-        //         Permission::firstOrCreate([
-        //             'name' => $permissionName,
-        //             'guard_name' => $guardName,
-        //         ]);
-
-        //         $permissions[] = $permissionName;
-        //     }
-        // }
-
-        // $this->record->syncPermissions($permissions);
-
-        // foreach (array_keys(config('permissions.modules')) as $module) {
-        //     unset($data[$module]);
-        // }
-
-        return $data;
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        return $record;
     }
 }
