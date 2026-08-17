@@ -2,11 +2,12 @@
 
 namespace App\Filament\Admin\Resources\Roles\Supports;
 
+use App\Models\User;
 use App\Services\PermissionService;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class Support
 {
@@ -65,11 +66,17 @@ class Support
 
     public static function cleanupOrphanedPermissions(string $guardName): void
     {
-        $usedByRoles = DB::table('role_has_permissions')
-            ->pluck('permission_id');
+        $usedByRoles = Role::with('permissions:id')
+            ->get()
+            ->pluck('permissions')
+            ->flatten()
+            ->pluck('id');
 
-        $usedByModels = DB::table('model_has_permissions')
-            ->pluck('permission_id');
+        $usedByModels = User::with('permissions:id')
+            ->get()
+            ->pluck('permissions')
+            ->flatten()
+            ->pluck('id');
 
         $usedPermissionIds = $usedByRoles->merge($usedByModels)->unique();
 

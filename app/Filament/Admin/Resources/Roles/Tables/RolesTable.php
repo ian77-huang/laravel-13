@@ -47,10 +47,9 @@ class RolesTable
                         ->label(__('button.delete'))
                         ->action(function ($records): void {
                             $guardNames = $records->pluck('guard_name')->unique()->values()->all();
-                            $roleIds = $records->pluck('id')->all();
 
-                            DB::transaction(function () use ($roleIds, $guardNames) {
-                                DB::table('roles')->whereIn('id', $roleIds)->delete();
+                            DB::transaction(function () use ($records, $guardNames) {
+                                $records->each->delete();
 
                                 foreach ($guardNames as $guardName) {
                                     Support::cleanupOrphanedPermissions($guardName);

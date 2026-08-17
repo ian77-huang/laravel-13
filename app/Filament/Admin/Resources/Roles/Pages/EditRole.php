@@ -26,10 +26,9 @@ class EditRole extends EditRecord
                 ->requiresConfirmation()
                 ->action(function (): void {
                     $guardName = $this->record->guard_name;
-                    $roleId = $this->record->id;
 
-                    DB::transaction(function () use ($roleId, $guardName) {
-                        DB::table('roles')->where('id', $roleId)->delete();
+                    DB::transaction(function () use ($guardName) {
+                        $this->record->delete();
                         Support::cleanupOrphanedPermissions($guardName);
                     });
 
