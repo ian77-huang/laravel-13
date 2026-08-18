@@ -31,6 +31,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
         ]);
 
+        $user->assignRole('super_admin');
+
         $user = User::updateOrCreate(
             ['email' => 'test@test.com'],
             [
