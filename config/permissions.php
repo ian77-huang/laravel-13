@@ -11,10 +11,18 @@ function createAction(string $key, string $value): array
 function createActions(?array $action = null): array
 {
     $actions = [
-        ...createAction('view', 'permission.actions.view'),
-        ...createAction('create', 'permission.actions.create'),
-        ...createAction('edit', 'permission.actions.edit'),
-        ...createAction('delete', 'permission.actions.delete'),
+        ...createAction('Create', 'filament-shield.Create'),
+        ...createAction('Delete', 'filament-shield.Delete'),
+        ...createAction('DeleteAny', 'filament-shield.DeleteAny'),
+        ...createAction('ForceDelete', 'filament-shield.ForceDelete'),
+        ...createAction('ForceDeleteAny', 'filament-shield.ForceDeleteAny'),
+        ...createAction('Replicate', 'filament-shield.Replicate'),
+        ...createAction('Reorder', 'filament-shield.Reorder'),
+        ...createAction('Restore', 'filament-shield.Restore'),
+        ...createAction('RestoreAny', 'filament-shield.RestoreAny'),
+        ...createAction('Update', 'filament-shield.Update'),
+        ...createAction('View', 'filament-shield.View'),
+        ...createAction('ViewAny', 'filament-shield.ViewAny'),
     ];
 
     if ($action && is_array($action)) {
@@ -26,16 +34,21 @@ function createActions(?array $action = null): array
 
 return [
     'modules' => [
-        'users' => 'permission.modules.user',
-        'roles' => 'permission.modules.role',
+        'User' => 'permission.modules.user',
+        'Role' => 'permission.modules.role',
+        'PermissionsUser' => 'permission.modules.user_permissions',
     ],
     'actions' => [
-        'users' => createActions(),
-        'roles' => createActions(),
+        'User' => createActions(),
+        'Role' => createActions(),
+        'PermissionsUser' => [
+            ...createAction('View', 'filament-shield.View'),
+            ...createAction('Update', 'filament-shield.Update'),
+        ],
     ],
     'guards' => [
-        'web' => [],
-        'admin' => ['users', 'roles'],
+        'web' => ['User', 'PermissionsUser', 'Role'],
+        'admin' => [],
         'api' => [],
     ],
 ];

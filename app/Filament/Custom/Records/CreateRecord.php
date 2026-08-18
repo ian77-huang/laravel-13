@@ -8,14 +8,23 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class CreateRecord extends FilamentCreateRecord
 {
-    public function getBreadcrumb(): string
+    /**
+     * List 頁面的 breadcrumb 翻譯 key。
+     *
+     * @var array{breadcrumb: string}
+     */
+    protected static array $transKeys = [
+        'breadcrumbs' => ['front' => null, 'back' => null],
+    ];
+
+    public function getBreadcrumbs(): array
     {
-        return __('button.create');
+        return [__(static::$transKeys['breadcrumbs']['front'] ?? 'transKeys.breadcrumbs.front'), __(static::$transKeys['breadcrumbs']['back'] ?? 'transKeys.breadcrumbs.back')];
     }
 
     public function getTitle(): string|Htmlable
     {
-        return __('filament.title.page.create', ['label' => static::getResource()::getTitleCaseModelLabel()]);
+        return __('filament.title.page.create', ['label' => __(static::$transKeys['breadcrumbs']['front'] ?? 'transKeys.main')]);
     }
 
     protected function getCreateFormAction(): Action

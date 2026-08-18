@@ -43,8 +43,8 @@ class UserSeeder extends Seeder
         );
 
         $user->profile()->updateOrCreate([], [
-            'name' => 'admin',
-            'email' => 'admin@example.com',
+            'name' => 'test',
+            'email' => 'test@example.com',
         ]);
     }
 }

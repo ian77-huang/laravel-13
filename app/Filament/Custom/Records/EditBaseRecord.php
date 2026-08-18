@@ -26,8 +26,6 @@ class EditBaseRecord extends FilamentEditRecord
     public function getTitle(): string|Htmlable
     {
         return __('filament.title.page.edit', ['label' => __(static::$transKeys['main'] ?? 'transKeys.main')]);
-
-        return '12345';
     }
 
     protected function getSaveFormAction(): Action

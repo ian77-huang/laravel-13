@@ -10,6 +10,10 @@ class ViewRole extends ViewRecord
 {
     protected static string $resource = RoleResource::class;
 
+    protected static array $transKeys = [
+        'breadcrumbs' => ['front' => 'role.role', 'back' => 'button.view'],
+    ];
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
         return app(PermissionService::class)->formatPermissionsForForm($data, $this->record);

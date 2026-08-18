@@ -10,7 +10,6 @@ class EditAction extends FilamentEditAction
     {
         parent::setUp();
 
-        // 統一設定全選與取消全選的按鈕語系
         $this->label(__('button.edit'));
     }
 }

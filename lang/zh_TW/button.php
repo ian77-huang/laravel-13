@@ -3,7 +3,7 @@
 return [
     'create' => '新增',
     'create_and_create_another' => '新增並再新增一個',
-    'edit' => '修改',
+    'edit' => '編輯',
     'delete' => '刪除',
     'view' => '檢視',
     'save' => '儲存變更',

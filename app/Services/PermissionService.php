@@ -132,8 +132,7 @@ class PermissionService
             if (! isset($permissionsByGuard[$guard])) {
                 $permissionsByGuard[$guard] = [];
             }
-            $module = explode('.', $permission->name)[0];
-            $action = explode('.', $permission->name)[1] ?? $permission->name;
+            [$action, $module] = explode(':', $permission->name);
             $permissionsByGuard[$guard][$module][] = $action;
         }
 

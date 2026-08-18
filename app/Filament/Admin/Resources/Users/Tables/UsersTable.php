@@ -2,10 +2,11 @@
 
 namespace App\Filament\Admin\Resources\Users\Tables;
 
+use App\Filament\Custom\Actions\Action;
 use App\Filament\Custom\Actions\EditAction;
 use App\Filament\Custom\Actions\ViewAction;
 use App\Models\User;
-use Filament\Actions\Action;
+// use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
@@ -54,9 +55,9 @@ class UsersTable
                 EditAction::make()
                     ->label(__('button.edit')),
                 Action::make('user.permission')
+                    ->setPermission('View:PermissionsUser')
                     ->label(__('button.user.permission'))
                     ->icon('heroicon-o-shield-check')
-                    // ->url(fn (User $record): string => UserResource::getUrl('permissions', ['record' => $record])),
                     ->url(fn (User $record): string => route('filament.admin.resources.users.permissions', ['record' => $record])),
             ])
             ->toolbarActions([

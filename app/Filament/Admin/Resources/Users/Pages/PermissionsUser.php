@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Users\Pages;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Components\CheckboxList;
 use App\Filament\Custom\Records\EditBaseRecord;
+use App\Filament\Custom\Traits\HasEditRecord;
 use App\Services\PermissionService;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
@@ -16,8 +17,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+// use Spatie\Permission\Traits\HasRoles;
+// use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+
 class PermissionsUser extends EditBaseRecord
 {
+    use HasEditRecord;
+
     protected static string $resource = UserResource::class;
 
     // protected string $view = 'filament.admin.resources.users.pages.permissions-user';
@@ -65,9 +71,13 @@ class PermissionsUser extends EditBaseRecord
                             ->toArray(),
                     )
                     ->columns(4)
+                    ->columnSpanFull()
                     ->bulkToggleable()
                     ->gridDirection(GridDirection::Row);
+                $checkboxLists[] = View::make('filament.components.divider')
+                    ->columnSpanFull();
             }
+            array_pop($checkboxLists);
             $sectionPermissions[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$guardKey))
                 ->statePath($guardKey)
                 ->columns(2)
@@ -153,7 +163,7 @@ class PermissionsUser extends EditBaseRecord
                         continue;
                     }
                     foreach ($actions as $action) {
-                        $permission = Permission::findByName("{$module}.{$action}", $guard);
+                        $permission = Permission::findByName("{$action}:{$module}", $guard);
                         if ($permission) {
                             $permissions[] = $permission;
                         }

@@ -16,6 +16,10 @@ class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
 
+    protected static array $transKeys = [
+        'breadcrumbs' => ['front' => 'role.role', 'back' => 'button.edit'],
+    ];
+
     protected function getHeaderActions(): array
     {
         return [
@@ -54,7 +58,7 @@ class EditRole extends EditRecord
 
             foreach ($guardPermissions as $module => $actions) {
                 foreach ($actions as $action) {
-                    $permissionName = "{$module}.{$action}";
+                    $permissionName = "{$action}:{$module}";
 
                     $permission = Permission::firstOrCreate([
                         'name' => $permissionName,

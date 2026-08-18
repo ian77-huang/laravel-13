@@ -4,6 +4,7 @@ return [
     'title' => '權限',
     'modules' => [
         'user' => '使用者',
+        'user_permissions' => '使用者權限',
         'role' => '角色',
     ],
     'navigation' => [

@@ -4,6 +4,8 @@ return [
     'title' => 'permission',
     'modules' => [
         'user' => 'User',
+        'user_permissions' => 'User Permissions',
+        'role' => 'Role',
     ],
     'navigation' => [
         'permission' => 'Permission',

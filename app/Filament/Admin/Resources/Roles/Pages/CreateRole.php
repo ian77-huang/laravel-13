@@ -15,6 +15,10 @@ class CreateRole extends CreateRecord
 {
     protected static string $resource = RoleResource::class;
 
+    protected static array $transKeys = [
+        'breadcrumbs' => ['front' => 'role.role', 'back' => 'button.create'],
+    ];
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         return app(PermissionService::class)->validRoleData($data);
@@ -35,7 +39,7 @@ class CreateRole extends CreateRecord
 
                 foreach ($modules as $module => $actions) {
                     foreach ($actions as $action) {
-                        $permissionName = "{$module}.{$action}";
+                        $permissionName = "{$action}:{$module}";
 
                         $permission = Permission::firstOrCreate([
                             'name' => $permissionName,

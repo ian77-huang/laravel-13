@@ -6,6 +6,7 @@ use App\Filament\Custom\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\GridDirection;
 use Illuminate\Validation\Rules\Unique;
@@ -41,9 +42,13 @@ class RoleForm
                             ->toArray(),
                     )
                     ->columns(4)
+                    ->columnSpanFull()
                     ->bulkToggleable()
                     ->gridDirection(GridDirection::Row);
+                $checkboxList[] = View::make('filament.components.divider')->columnSpanFull();
             }
+            array_pop($checkboxList);
+
             $sections[] = Section::make(__('permission.guard').' => '.__('permission.guards.'.$keyGuards))
                 ->statePath($keyGuards)
                 ->columns(2)
