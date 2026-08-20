@@ -106,4 +106,5 @@
             &copy; 2026 Laravel 13 Web Project - ServerName({{ env('INSTANCE_NAME') }})
         </div>
     </footer>
+    <x-toast />
 @endsection

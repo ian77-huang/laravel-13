@@ -14,6 +14,5 @@ window.Echo = new Echo({
 })
 
 window.Echo.channel('chat').listen('MessageSent', (event) => {
-    Alpine.store('notification').add({ is_read: false })
-    console.log(event.message)
+    Alpine.store('toast').open(event.message, 'warning')
 })

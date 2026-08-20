@@ -1,5 +1,5 @@
 @props([])
-<div class="dropdown dropdown-end">
+<div class="dropdown dropdown-end" x-cloak>
     <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
         <div class="indicator">
             <span x-show="$store.notification.hasUnread()" x-text="$store.notification.unreadCount()"

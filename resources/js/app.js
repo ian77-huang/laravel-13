@@ -2,6 +2,7 @@ import Alpine from 'alpinejs'
 import localeSwitcher from './components/locale-switcher'
 import lazyImage from './components/lazy-image'
 import lib from './components/lib'
+import toast from './components/toast'
 import notificationStore from './components/notification'
 
 const libSupport = lib()
@@ -42,6 +43,7 @@ Alpine.data('App', () => ({
     },
 }))
 
+Alpine.store('toast', toast())
 Alpine.store('notification', notificationStore())
 
 Alpine.start()
