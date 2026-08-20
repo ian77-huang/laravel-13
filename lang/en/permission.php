@@ -6,6 +6,7 @@ return [
         'user' => 'User',
         'user_permissions' => 'User Permissions',
         'role' => 'Role',
+        'broadcast' => 'Broadcast',
     ],
     'navigation' => [
         'permission' => 'Permission',

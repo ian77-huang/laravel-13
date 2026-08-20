@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Users;
 
+use App\Filament\Admin\Resources\Users\Pages\BroadcastAll;
 use App\Filament\Admin\Resources\Users\Pages\CreateUser;
 use App\Filament\Admin\Resources\Users\Pages\EditUser;
 use App\Filament\Admin\Resources\Users\Pages\ListUsers;
@@ -57,6 +58,7 @@ class UserResource extends Resource
         return [
             'index' => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
+            'broadcastAll' => BroadcastAll::route('/broadcastAll'),
             'view' => ViewUser::route('/{record}'),
             'edit' => EditUser::route('/{record}/edit'),
             'permissions' => PermissionsUser::route('/{record}/permissions'),

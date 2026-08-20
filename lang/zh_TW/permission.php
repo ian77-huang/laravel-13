@@ -6,6 +6,7 @@ return [
         'user' => '使用者',
         'user_permissions' => '使用者權限',
         'role' => '角色',
+        'broadcast' => '廣播',
     ],
     'navigation' => [
         'permission' => '權限',

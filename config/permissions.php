@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('createAction')) {
+if (! function_exists('createAction')) {
     function createAction(string $key, string $value): array
     {
         $actions = [];
@@ -10,7 +10,7 @@ if (!function_exists('createAction')) {
     }
 }
 
-if (!function_exists('createActions')) {
+if (! function_exists('createActions')) {
     function createActions(?array $action = null): array
     {
         $actions = [
@@ -41,6 +41,7 @@ return [
         'User' => 'permission.modules.user',
         'Role' => 'permission.modules.role',
         'PermissionsUser' => 'permission.modules.user_permissions',
+        'Broadcast' => 'permission.modules.broadcast',
     ],
     'actions' => [
         'User' => createActions(),
@@ -49,9 +50,13 @@ return [
             ...createAction('View', 'filament-shield.View'),
             ...createAction('Update', 'filament-shield.Update'),
         ],
+        'Broadcast' => [
+            ...createAction('View', 'filament-shield.View'),
+            ...createAction('Update', 'filament-shield.Update'),
+        ],
     ],
     'guards' => [
-        'web' => ['User', 'PermissionsUser', 'Role'],
+        'web' => ['User', 'PermissionsUser', 'Role', 'Broadcast'],
         'admin' => [],
         'api' => [],
     ],

@@ -11,4 +11,5 @@ return [
     'select_all' => '全選',
     'deselect_all' => '取消全選',
     'user.permission' => '權限',
+    'user.broadcastAll' => '全體廣播',
 ];
