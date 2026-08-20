@@ -17,6 +17,7 @@
         "laravel-best-practices",
         "octane-development",
         "pest-testing",
+        "echo-development",
         "tailwindcss-development"
     ]
 }

@@ -2,6 +2,7 @@ import Alpine from 'alpinejs'
 import localeSwitcher from './components/locale-switcher'
 import lazyImage from './components/lazy-image'
 import lib from './components/lib'
+import notificationStore from './components/notification'
 
 const libSupport = lib()
 
@@ -41,4 +42,13 @@ Alpine.data('App', () => ({
     },
 }))
 
+Alpine.store('notification', notificationStore())
+
 Alpine.start()
+
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allow your team to quickly build robust real-time web applications.
+ */
+import './echo'
