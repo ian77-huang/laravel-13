@@ -12,4 +12,5 @@ return [
     'deselect_all' => 'Deselect All',
     'user.permission' => 'permission',
     'user.broadcastAll' => 'Broadcast all',
+    'dispatch' => 'Dispatch',
 ];

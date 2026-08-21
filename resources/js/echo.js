@@ -13,6 +13,15 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 })
 
-window.Echo.channel('chat').listen('MessageSent', (event) => {
-    Alpine.store('toast').open(event.message, 'warning')
+const userId = document.querySelector('meta[name="user-id"]')?.content ?? ''
+
+window.Echo.channel('broadcast.all').listen('.broadcast.message', (event) => {
+    console.log(`broadcast.all`, event)
+    Alpine.store('toast').open(event.message, event.type)
 })
+if (userId !== '') {
+    window.Echo.channel('broadcast.user.' + userId).listen('.broadcast.message', (event) => {
+        console.log(`broadcast.all`, event)
+        Alpine.store('toast').open(event.message, event.type)
+    })
+}
