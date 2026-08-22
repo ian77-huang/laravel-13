@@ -7,6 +7,8 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Page extends FilamentResourcesPage
 {
+    public ?string $previousUrl = null;
+
     /**
      * List 頁面的 breadcrumb 翻譯 key。
      *
@@ -27,8 +29,27 @@ class Page extends FilamentResourcesPage
         return __('filament.title.page.create', ['label' => __(static::$transKeys['breadcrumbs']['front'] ?? 'transKeys.main')]);
     }
 
+    public function getTitleButtonSubmit(): string|Htmlable
+    {
+        return __(static::$transKeys['button']['submit']);
+    }
+
+    public function getTitleButtonCancel(): string|Htmlable
+    {
+        return __(static::$transKeys['button']['cancel'] ?? 'button.cancel');
+    }
+
     public function mount(): void
     {
         $this->form->fill([]);
+
+        $this->previousUrl = url()->previous();
+    }
+
+    public function cancel(): void
+    {
+        $this->redirect(
+            $this->previousUrl
+        );
     }
 }

@@ -24,7 +24,7 @@ class BroadcastAll extends Page
 
     protected static array $transKeys = [
         'breadcrumbs' => ['front' => 'user.user', 'back' => 'broadcast.title'],
-        'button' => ['submit' => 'button.dispatch', 'cancel' => 'button.dispatch'],
+        'button' => ['submit' => 'button.dispatch', 'cancel' => 'button.cancel'],
     ];
 
     public function getTitle(): string|Htmlable
@@ -127,31 +127,4 @@ class BroadcastAll extends Page
 
         // dd($data);
     }
-
-    // public function save(): void
-    // {
-    //     $data = $this->form->getState();
-
-    //     $payload = [
-    //         'title' => $data['title'],
-    //         'message' => $data['message'],
-    //         'type' => $data['type'],
-    //     ];
-
-    //     if ($data['target'] === 'all') {
-    //         Broadcast::channel('broadcast.all', true);
-    //         broadcast()->to('broadcast.all')->event('broadcast.message', $payload);
-    //     } else {
-    //         foreach ($data['roles'] as $role) {
-    //             broadcast()->to("broadcast.role.{$role}")->event('broadcast.message', $payload);
-    //         }
-    //     }
-
-    //     Notification::make()
-    //         ->success()
-    //         ->title(__('broadcast.notification.sent'))
-    //         ->send();
-
-    //     $this->form->fill();
-    // }
 }
