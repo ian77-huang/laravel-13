@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Users\Pages;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Resources\Pages\Page;
 use App\Models\User;
+use App\Support\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -25,6 +26,11 @@ class BroadcastAll extends Page
         'breadcrumbs' => ['front' => 'user.user', 'back' => 'broadcast.title'],
         'button' => ['submit' => 'button.dispatch', 'cancel' => 'button.cancel'],
     ];
+
+    protected function authorizeAccess(): void
+    {
+        Auth::can('View:Broadcast');
+    }
 
     public function getTitle(): string|Htmlable
     {
@@ -97,6 +103,7 @@ class BroadcastAll extends Page
 
     public function submit(): void
     {
+        Auth::can('Create:Broadcast');
         $data = $this->form->getState();
         if (isset($data['roles'])) {
             $roles = Role::whereIn('name', $data['roles'])

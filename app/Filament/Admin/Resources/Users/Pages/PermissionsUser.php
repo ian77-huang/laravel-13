@@ -17,16 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-// use Spatie\Permission\Traits\HasRoles;
-// use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-
 class PermissionsUser extends EditBaseRecord
 {
     use HasEditRecord;
 
     protected static string $resource = UserResource::class;
-
-    // protected string $view = 'filament.admin.resources.users.pages.permissions-user';
 
     protected static array $transKeys = [
         'breadcrumbs' => ['front' => 'user.user', 'back' => 'permission.title'],

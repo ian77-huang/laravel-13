@@ -52,7 +52,8 @@ return [
         ],
         'Broadcast' => [
             ...createAction('View', 'filament-shield.View'),
-            ...createAction('Update', 'filament-shield.Update'),
+            // ...createAction('Update', 'filament-shield.Update'),
+            ...createAction('Create', 'filament-shield.Create'),
         ],
     ],
     'guards' => [

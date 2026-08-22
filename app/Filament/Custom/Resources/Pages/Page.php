@@ -41,9 +41,13 @@ class Page extends FilamentResourcesPage
         return __(static::$transKeys['button']['cancel'] ?? 'button.cancel');
     }
 
+    protected function authorizeAccess(): void {}
+
     public function mount(): void
     {
         $this->form->fill([]);
+
+        $this->authorizeAccess();
 
         $this->previousUrl = url()->previous();
     }
