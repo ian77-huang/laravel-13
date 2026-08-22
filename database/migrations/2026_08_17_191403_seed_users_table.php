@@ -13,7 +13,7 @@ return new class extends Migration
         for ($i = 1; $i <= 10; $i++) {
             User::create([
                 'name' => "user{$i}",
-                'email' => "user{$i}@example.com",
+                'email' => "user{$i}@test.com",
                 'password' => $password,
                 'email_verified_at' => now(),
             ]);

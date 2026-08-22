@@ -14,4 +14,9 @@ return [
         'role' => '角色',
         'user' => '使用者',
     ],
+    'notification' => [
+        'sent' => [
+            'success' => '傳送成功',
+        ],
+    ],
 ];

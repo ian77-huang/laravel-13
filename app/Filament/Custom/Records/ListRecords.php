@@ -4,7 +4,6 @@ namespace App\Filament\Custom\Records;
 
 use App\Filament\Custom\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords as FilamentListRecords;
-use Illuminate\Support\Facades\Auth;
 
 abstract class ListRecords extends FilamentListRecords
 {
@@ -22,11 +21,6 @@ abstract class ListRecords extends FilamentListRecords
 
     protected function getHeaderActions(): array
     {
-        echo '<pre>';
-        var_dump(Auth::user()->id);
-        echo '</pre>';
-        // exit;
-
         return [
             CreateAction::make()
                 ->label(__('button.create')),

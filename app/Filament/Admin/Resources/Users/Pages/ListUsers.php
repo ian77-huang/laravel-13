@@ -6,7 +6,6 @@ use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Actions\Action;
 use App\Filament\Custom\Actions\CreateAction;
 use App\Filament\Custom\Records\ListRecords;
-use Illuminate\Support\Facades\Auth;
 
 class ListUsers extends ListRecords
 {
@@ -16,11 +15,6 @@ class ListUsers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        echo '<pre>';
-        var_dump(Auth::user()->id);
-        echo '</pre>';
-        // exit;
-
         return [
             CreateAction::make()
                 ->label(__('button.create')),

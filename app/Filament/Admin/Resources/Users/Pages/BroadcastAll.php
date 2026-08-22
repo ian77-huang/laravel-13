@@ -4,21 +4,20 @@ namespace App\Filament\Admin\Resources\Users\Pages;
 
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Resources\Pages\Page;
-use App\Models\Role;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
+use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Broadcast;
+use Spatie\Permission\Models\Role;
 
 class BroadcastAll extends Page
 {
     protected static string $resource = UserResource::class;
-
-    protected string $view = 'filament.admin.resources.users.pages.broadcastAll';
 
     public ?array $data = [];
 
@@ -74,7 +73,7 @@ class BroadcastAll extends Page
                     ->multiple()
                     ->visible(fn ($get) => $get('target') === 'role')
                     ->columnSpanFull(),
-                Select::make('user_id')
+                Select::make('userIds')
                     ->label(__('user.user'))
                     ->searchable()
                     ->getSearchResultsUsing(function (string $search): array {
@@ -99,6 +98,22 @@ class BroadcastAll extends Page
     public function submit(): void
     {
         $data = $this->form->getState();
+        if (isset($data['roles'])) {
+            $roles = Role::whereIn('name', $data['roles'])
+                ->pluck('name')
+                ->toArray();
+            if (count($data['roles']) !== count($roles)) {
+                throw new Halt('Roles is erros.');
+            }
+        }
+        if (isset($data['userIds'])) {
+            $userIds = User::whereIn('id', $data['userIds'])
+                ->pluck('id')
+                ->toArray();
+            if (count($data['userIds']) !== count($userIds)) {
+                throw new Halt('userIds is erros.');
+            }
+        }
 
         $payload = [
             'title' => $data['title'],
@@ -111,20 +126,48 @@ class BroadcastAll extends Page
                 ->as('broadcast.message')
                 ->with($payload)
                 ->send();
-        } else {
+        }
+
+        $userIds = [];
+        if ($data['target'] === 'role') {
             foreach ($data['roles'] as $role) {
-                Broadcast::on("broadcast.role.{$role}")
+                $users = User::role($role)->get();
+                foreach ($users as $user) {
+                    array_push($userIds, $user->id);
+                }
+            }
+        }
+        if ($data['target'] === 'user') {
+            foreach ($data['userIds'] as $userId) {
+                array_push($userIds, $userId);
+            }
+        }
+
+        if (count($userIds) !== 0) {
+            foreach ($userIds as $userId) {
+                Broadcast::on("broadcast.user.{$userId}")
                     ->as('broadcast.message')
                     ->with($payload)
                     ->send();
             }
         }
 
+        $titleNotification = __('broadcast.notification.sent.success');
+        if ($data['target'] === 'all') {
+            $titleNotification .= '('.__('broadcast.target.all').')';
+        }
+        if ($data['target'] === 'role') {
+            $titleNotification .= '('.__('broadcast.target.role').')';
+        }
+        if ($data['target'] === 'user') {
+            $titleNotification .= '('.__('broadcast.target.user').')';
+        }
+
         Notification::make()
             ->success()
-            ->title(__('broadcast.notification.sent'))
+            ->title($titleNotification)
             ->send();
 
-        // dd($data);
+        $this->form->fill();
     }
 }

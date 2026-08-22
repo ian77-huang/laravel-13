@@ -11,6 +11,7 @@
 @source '../../storage/framework/views/*.php';
 
 @source inline("alert-{info,success,warning,error,soft,outline,dash,vertical,horizontal}");
+@source inline("text-{info,success,warning,error,soft,outline,dash,vertical,horizontal}");
 
 /* @theme {
     --font-sans:

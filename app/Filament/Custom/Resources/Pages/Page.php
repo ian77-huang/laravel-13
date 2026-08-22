@@ -7,6 +7,8 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Page extends FilamentResourcesPage
 {
+    protected string $view = 'filament.admin.resources.pages.page';
+
     public ?string $previousUrl = null;
 
     /**

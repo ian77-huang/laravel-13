@@ -4,9 +4,10 @@ const toast = () => {
     const data = Alpine.reactive({
         items: [],
     })
-    const add = (message, type = 'success') => {
+    const add = (title, message, type = 'success') => {
         const item = {
             id: Date.now() + Math.random(),
+            title,
             message,
             type,
         }
@@ -17,8 +18,8 @@ const toast = () => {
         get items() {
             return data.items
         },
-        open(message, type = 'success') {
-            add(message, type)
+        open(title, message, type = 'success') {
+            add(title, message, type)
         },
         close(id) {
             const index = data.items.findIndex((item) => item.id === id)

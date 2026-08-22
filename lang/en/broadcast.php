@@ -14,4 +14,9 @@ return [
         'role' => 'Role',
         'user' => 'User',
     ],
+    'notification' => [
+        'sent' => [
+            'success' => 'Sent success',
+        ],
+    ],
 ];

@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     <form wire:submit="submit">
         {{ $this->form }}
-        <div style="display:flex; margin-top:50px">
+        <div class="gap-2.5" style="display:flex; margin-top:50px">
             <x-filament::button type="submit" color="primary">
                 {{ $this->getTitleButtonSubmit() }}
             </x-filament::button>
