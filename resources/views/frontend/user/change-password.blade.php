@@ -68,7 +68,6 @@
                                 this.showToast(errors.join("\n") || (data.message || ''), 'error');
                             }
                         } catch (err) {
-                            console.log(555, this.form)
                             this.showToast(err.message, 'error');
                         } finally {
                             this.loading = false;

@@ -17,5 +17,5 @@ Before planning or editing, find the row whose globs match the file's path and r
 | docker/nginx/** | .ai/rules/nginx.md |
 | app/Filament/Admin/Resources/**/Pages/*List*.php | .ai/rules/pages.md |
 | app/Support/** | .ai/rules/support.md |
-| tests/** | .ai/rules/tests.md |
-| resources/views/** | .ai/rules/views.md |
+| tests/**, tests/**/*.php | .ai/rules/tests.md |
+| resources/views/**, resources/views/**/*.blade.php | .ai/rules/views.md |

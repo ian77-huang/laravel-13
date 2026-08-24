@@ -38,9 +38,7 @@ Alpine.data('usersMenus', (initialTitle) => ({
 }))
 
 Alpine.data('App', () => ({
-    init() {
-        console.log()
-    },
+    init() {},
 }))
 
 Alpine.store('toast', toast())

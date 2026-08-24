@@ -1,5 +1,5 @@
 @props([])
-<div x-data class="toast toast-top toast-end z-50" x-cloak>
+<div x-data class="toast toast-bottom toast-end z-50" x-cloak>
     <template x-for="item in $store.toast.items" :key="item.id">
         <div role="alert" class="alert alert-vertical sm:alert-horizontal min-w-75">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

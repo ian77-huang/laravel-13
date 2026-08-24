@@ -10,4 +10,5 @@ return [
     'user.profile' => '個人檔案',
     'user.reset-password' => '重設密碼',
     'user.change-password' => '更新密碼',
+    'user.friendships' => '朋友',
 ];

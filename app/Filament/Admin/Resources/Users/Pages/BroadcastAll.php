@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Users\Pages;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Custom\Resources\Pages\Page;
 use App\Models\User;
+use App\Services\BroadcastService;
 use App\Support\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -13,7 +14,6 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Facades\Broadcast;
 use Spatie\Permission\Models\Role;
 
 class BroadcastAll extends Page
@@ -128,35 +128,19 @@ class BroadcastAll extends Page
             'type' => $data['type'],
         ];
 
+        $broadcastService = app(BroadcastService::class);
+
         if ($data['target'] === 'all') {
-            Broadcast::on('broadcast.all')
-                ->as('broadcast.message')
-                ->with($payload)
-                ->send();
+            $broadcastService->toAll($payload);
         }
 
-        $userIds = [];
         if ($data['target'] === 'role') {
-            foreach ($data['roles'] as $role) {
-                $users = User::role($role)->get();
-                foreach ($users as $user) {
-                    array_push($userIds, $user->id);
-                }
-            }
-        }
-        if ($data['target'] === 'user') {
-            foreach ($data['userIds'] as $userId) {
-                array_push($userIds, $userId);
-            }
+            $userIds = User::role($data['roles'])->pluck('id')->all();
+            $broadcastService->toUsers($userIds, $payload);
         }
 
-        if (count($userIds) !== 0) {
-            foreach ($userIds as $userId) {
-                Broadcast::on("broadcast.user.{$userId}")
-                    ->as('broadcast.message')
-                    ->with($payload)
-                    ->send();
-            }
+        if ($data['target'] === 'user') {
+            $broadcastService->toUsers($data['userIds'], $payload);
         }
 
         $titleNotification = __('broadcast.notification.sent.success');

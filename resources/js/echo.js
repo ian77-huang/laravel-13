@@ -19,8 +19,29 @@ window.Echo.channel('broadcast.all').listen('.broadcast.message', (event) => {
     Alpine.store('toast').open(event.title, event.message, event.type)
 })
 if (userId !== '') {
-    window.Echo.channel('broadcast.user.' + userId).listen('.broadcast.message', (event) => {
-        console.log(`broadcast.all`, event)
-        Alpine.store('toast').open(event.message, event.type)
+    const notificationChannel = window.Echo.private(`notifications.${userId}`)
+
+    notificationChannel.listen('.notification.created', (event) => {
+        const store = Alpine.store('notification')
+        store.unreadCount = event.unread_count
+        if (store.loaded && Array.isArray(store.items)) {
+            const exists = store.items.some((item) => item.id === event.id)
+            if (!exists) {
+                store.items.unshift({
+                    id: event.id,
+                    type: event.type,
+                    message: event.message,
+                    is_read: false,
+                    sender_name: event.sender_name,
+                    created_at: event.created_at,
+                })
+                if (store.items.length > 20) store.items.pop()
+            }
+        }
+        Alpine.store('toast').notify(event.message, 'info')
+    })
+
+    notificationChannel.listen('.broadcast.message', (event) => {
+        Alpine.store('toast').open(event.title, event.message, event.type)
     })
 }

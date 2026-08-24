@@ -70,7 +70,9 @@
         </div>
         <div class="navbar-end gap-3">
             <x-locale-switcher />
-            <x-notification />
+            @auth
+                <x-notification />
+            @endauth
             @auth
                 <button class="btn btn-square" @click="$action.userLogout()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

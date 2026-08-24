@@ -10,4 +10,5 @@ return [
     'user.profile' => 'Profile',
     'user.reset-password' => 'Reset Password',
     'user.change-password' => 'Change Password',
+    'user.friendships' => 'Friendships',
 ];
