@@ -2,6 +2,46 @@
 
 Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試兩種環境。
 前端使用 Tailwind CSS v4 + daisyUI 5 + Alpine.js 3，以 Vite 打包。
+功能面涵蓋：會員認證（Fortify + Passkeys）、社群好友系統、站內通知與 WebSocket 即時推播（Reverb）、Filament v5 管理後台（Shield 權限）與後台廣播。測試使用 Pest。
+
+## 快速開始
+
+> 完整的 Docker 架構說明見下方「環境需求」「開發環境」章節；這裡是最短路徑。
+
+```bash
+# 1. 安裝相依
+composer install
+npm install
+
+# 2. 環境檔
+cp .env.example .env
+php artisan key:generate
+# 本機 CLI 連容器內服務：DB_HOST=127.0.0.1 / DB_PORT=3307、REDIS_PORT=6380（見 .env 註解）
+# BROADCAST_CONNECTION=reverb、QUEUE_CONNECTION=database、SESSION_DRIVER=database 已是預設
+
+# 3. 啟動 Docker 開發環境（nginx + app×3 + mysql + redis + memcached）
+docker compose -f docker-compose.dev.yml up -d
+# 容器首次啟動會自動 composer install / npm install（三台 app 以 flock 串行執行）
+
+# 4. 建立資料表 + 種子資料（含示範帳號）
+php artisan migrate --seed
+
+# 5. 前端資源
+npm run build        # 或 npm run dev（HMR 開發模式）
+
+# 6. WebSocket 推播伺服器（另開一個終端機；好友邀請/通知即時紅點需要它）
+php artisan reverb:start    # 監聽 :8080
+```
+
+完成後打開 http://localhost:8000 ，用示範帳號登入：
+
+| 帳號                                 | 密碼       | 說明                            |
+| ------------------------------------ | ---------- | ------------------------------- |
+| `admin@test.com`                     | `12345678` | super_admin，可進 `/admin` 後台 |
+| `test@test.com`                      | `12345678` | 一般會員                        |
+| `user1@test.com` ~ `user10@test.com` | `12345678` | 一般會員（好友系統測試用）      |
+
+> **體驗即時通知**：用兩個瀏覽器分別登入 `user1@test.com` 與 `user2@test.com`，user1 對 user2 送出好友邀請，user2 的鈴鐺**不用換頁**就會出現紅色數字與 toast。
 
 ## 目前網站狀態
 
@@ -13,23 +53,67 @@ Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試�
 ### 功能特色
 
 - **多語系切換**：`zh_TW` / `en`，透過 navbar 的 `x-locale-switcher`（Alpine `localeSwitcher` component）呼叫 `POST /api/lang`，`SetLocale` middleware 依 `locale` cookie 套用白名單語系（`config/app.php` 的 `available_locales`）。
-- **Blade 元件**：自訂 `x-card`、`x-fieldset`、`x-img`、`x-icon.*`（brands/solid）、`x-locale-switcher`、`x-layouts.mc`、`x-layouts.*`。
 - **快取**：memcached（`CACHE_STORE=memcached`），`CacheHub` 封裝，cache key 集中於 `config/constants.php`。
 - **Octane 並行**：`IndexController` 以 `Octane::concurrently()` 同時抓取經文與頻道。
 
 ### 路由
 
-| Method | URI | 說明 |
-|---|---|---|
-| `GET` | `/` | 首頁（每日經文 + YouTube 頻道） |
-| `POST` | `/api/lang` | 切換語系（session + cookie） |
+| Method     | URI                                                                | 說明                            |
+| ---------- | ------------------------------------------------------------------ | ------------------------------- |
+| `GET`      | `/`                                                                | 首頁（每日經文 + YouTube 頻道） |
+| `POST`     | `/api/lang`                                                        | 切換語系（session + cookie）    |
+| `GET/POST` | `/user/login`、`/user/register`、`/user/forgot-password`           | Fortify 認證頁                  |
+| `POST`     | `/user/logout`                                                     | 登出                            |
+| `GET/POST` | `/user/passkeys/*`                                                 | Passkey（WebAuthn）註冊與登入   |
+| `GET`      | `/user`、`/user/profile`、`/user/change-password`、`/user/friends` | 會員專區（需登入）              |
+| `*`        | `/admin/*`                                                         | Filament 管理後台               |
+
+> `/api/*` 未登入回 401 JSON；會員專區路由套 `auth` middleware。路由參數走 **route model binding**（不存在自動 404），授權規則在 controller 內明確處理（不能邀請自己 422、blocked 403、重複邀請 409）。
 
 ### 資料庫
 
 - `bible_*`：聖經（`bible_books`、`bible_verse_refs`、`bible_verses`，多語經文）。
 - `youtube_*`：YouTube 頻道 / 播放清單 / 影片資料。
 - `roles`、`permissions`、`model_has_roles`、`model_has_permissions`、`role_has_permissions`：Spatie Permission 多角色權限管理。
-- Seeder：`php artisan db:seed` 填入測試資料（經文、頻道等）。
+- `users`、`users_profile`：會員與個人檔案（頭像、電話、簡介）。
+- `passkeys`：WebAuthn Passkey 憑證（laravel/pao）。
+- `sessions`、`password_reset_tokens`：DB session 與忘記密碼 token。
+- `friendships`：好友關係，**單筆紀錄雙視角設計**（`user_id`=邀請方、`friend_id`=受邀方）。
+- `notifications`：站內通知（`type`、`message`、`sender_id`、`is_read`）。
+- `jobs`、`job_batches`、`failed_jobs`：資料庫 queue（`QUEUE_CONNECTION=database`）。
+- Seeder：`php artisan db:seed` 填入測試資料（經文、頻道、示範帳號 user1~user10、Shield 角色）。
+
+## 會員系統（Fortify + Passkeys）
+
+認證後端使用 **Laravel Fortify**（前端自訂 Blade 頁面，非 Breeze 全套），並支援 **Passkey（WebAuthn，laravel/pao）** 登入：
+
+- 登入 / 註冊 / 忘記密碼 / 登出：`/user/login`、`/user/register`、`/user/forgot-password`。
+- 會員資料表含 2FA 欄位（`two_factor_*`）。
+- 個人專區：`/user`（首頁）、`/user/profile`（users_profile 資料）、`/user/change-password`、`/user/friends`（好友）。
+- Session 存 DB（`SESSION_DRIVER=database`）。
+
+## 社群好友系統
+
+頁面 `/user/friends`：列出所有活躍會員與「相對於登入者」的好友狀態，可直接搜尋過濾、送邀請 / 接受 / 拒絕 / 刪除。
+
+### 站內通知 API
+
+前端導覽列的鈴鐺（`x-notification` 元件 + Alpine store）：頁面載入自動撈未讀數（`x-init`）、點開下拉即時拉清單、點通知樂觀更新已讀、「全部標為已讀」、空狀態 / 載入中各有畫面。訪客不渲染鈴鐺。
+
+### WebSocket 架構
+
+```
+好友邀請 / 接受 → NotificationCreated 事件（ShouldBroadcastNow，免 queue worker）
+                      ↓ 廣播到私人頻道 notifications.{收件者id}
+收件者瀏覽器（echo.js 已訂閱自己的頻道）
+    ├→ 鈴鐺紅色數字即時更新（payload 內含伺服器算好的 unread_count）
+    ├→ 若通知清單已載入：新通知插入頂端
+    └→ toast 提示
+```
+
+- **頻道授權**：`routes/channels.php` 的 `notifications.{userId}` 只有本人能訂閱（Reverb 連線時向後端驗證）。
+- **後台廣播同走此管道**：Filament 後台的廣播頁對個人 / 角色發送時，用 `BroadcastService::toUsers()` 推到每個目標用戶的私人頻道（事件名 `broadcast.message`，前端以 toast 顯示）；「全部」目標則維持公開頻道 `broadcast.all`。
+- **啟動**：`php artisan reverb:start`（:8080），`.env` 需 `BROADCAST_CONNECTION=reverb`；前端變數 `VITE_REVERB_*` 對應。
 
 ## Filament 管理後台
 
@@ -69,20 +153,25 @@ Laravel 13 + Laravel Octane (Swoole) 專案，以 Docker 建置正式與測試�
 
 Spatie `HasRoles` trait 內建 `bootHasRoles()` 和 `bootHasPermissions()`，在 `deleting` 事件中自動執行 `detach()`，清除 `model_has_roles` 和 `model_has_permissions` 的關聯資料，無需額外處理。
 
-#### 自訂 Blade 元件
+#### 廣播功能（BroadcastAll）
 
-- `resources/views/filament/components/title.blade.php`：標題元件（使用行內 style，因 Filament 面板未載入自訂 Tailwind CSS）
-- `resources/views/filament/components/divider.blade.php`：分隔線元件（使用行內 style）
+位置：`app/Filament/Admin/Resources/Users/Pages/BroadcastAll.php`，路由 `/admin/users/broadcastAll`。
 
-> **注意**：Filament 面板使用自己的 CSS 編譯流程，不會載入 `resources/css/app.css`。若需在 Filament 面板中使用自訂 Tailwind utility classes，需透過 `php artisan make:filament-theme` 建立自訂主題。
+- 需要 `View:Broadcast` / `Create:Broadcast` 權限（`app/Support/Auth.php` 統一檢查）。
+- 表單：標題、類型（info/success/warning/error）、訊息、目標（all / role / user）。
+- 發送邏輯抽在 `App\Services\BroadcastService`：
+    - `toAll()`：公開頻道 `broadcast.all`
+    - `toUsers()`：逐一推送到每個目標用戶的私人頻道 `notifications.{userId}`（自動去重）
+- 前端 `resources/js/echo.js` 監聽 `.broadcast.message` 事件以 toast 顯示；私人頻道的訂閱需通過授權，他人無法竊聽。
 
 ## 環境需求
 
 - Docker Desktop
 - Composer（本機，用於 tinker/測試等本機工具）
 - Node.js（本機，用於 `npm run dev` / `npm run build`）
+- PHP 8.4 CLI（本機執行 `php artisan` 指令與 Pest 測試用；網站服務本身跑在容器內）
 
-> 本機不需安裝 PHP / Nginx / MySQL / Redis —— 全部都在 Docker 容器內。
+> 容器內已含 PHP 8.4 + Swoole + Nginx + MySQL + Redis + Memcached；本機 CLI 透過 `127.0.0.1:3307`(mysql) / `6380`(redis) 連到容器。
 
 ## 架構
 
@@ -114,10 +203,6 @@ docker compose -f docker-compose.dev.yml exec nginx nginx -s reload   # 重要�
 docker compose -f docker-compose.dev.yml down      # 停止（保留 docker/mysql_data、docker/redis_data 資料）
 docker compose -f docker-compose.dev.yml down -v   # 停止並刪除資料
 ```
-
-> **重要**：nginx 的 `upstream` 是**靜態**解析——只在 nginx 啟動/reload 時解析一次 `app1/2/3` 的 IP。若 app 容器重建換了 IP（如 `docker compose up -d --build`），必須執行 `docker compose exec nginx nginx -s reload`，否則請求會打到舊 IP 而 502。
-
-**開發環境禁止 HTTP 快取**：`PreventHttpCache` middleware 只在本機環境（`APP_ENV=local`）對所有 response 送出 `Cache-Control: no-store`，確保每次重新整理都拿到新頁面（驗證負載平衡時 footer 的 `ServerName(...)` 會跳動）。正式環境不受影響。
 
 本機連資料庫測試用 `3307`(mysql) / `6380`(redis)：
 
@@ -154,20 +239,6 @@ php artisan db:seed
 ```
 
 > 本機 CLI 透過 `127.0.0.1:3307` 連到容器內 MySQL。
-
-### Octane 特性
-
-- **熱更新**：改 code 後 log 會出現 `Application change detected. Restarting workers…`，瀏覽器重新整理即可看到。
-- **真並行**：在 web request 內用 `Octane::concurrently([...])` 並行執行多個任務（Swoole task workers），效果等同 goroutine：
-
-```php
-use Laravel\Octane\Facades\Octane;
-
-[$users, $servers] = Octane::concurrently([
-    fn () => User::all(),
-    fn () => Server::all(),
-]);
-```
 
 ## 正式環境
 
@@ -216,10 +287,10 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod exec nginx nginx 
 
 開發與正式是**兩份完全獨立的 compose 設定檔**，不共用、不疊加。共用僅限於 `docker/php/opcache.ini` 與 `docker/nginx/` 設定：
 
-| 檔案 | 用途 | 啟動指令 |
-|---|---|---|
-| `docker-compose.dev.yml` | 開發：app×3 + nginx + memcached + mysql + redis，volume 掛載 + `--watch` | `docker compose -f docker-compose.dev.yml up -d` |
-| `docker-compose.prod.yml` | 正式：app×3 + nginx + memcached（無 mysql/redis），映像 bake 程式碼 | `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build` |
+| 檔案                      | 用途                                                                     | 啟動指令                                                                       |
+| ------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `docker-compose.dev.yml`  | 開發：app×3 + nginx + memcached + mysql + redis，volume 掛載 + `--watch` | `docker compose -f docker-compose.dev.yml up -d`                               |
+| `docker-compose.prod.yml` | 正式：app×3 + nginx + memcached（無 mysql/redis），映像 bake 程式碼      | `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build` |
 
 ### docker-compose.dev.yml（開發環境）
 
