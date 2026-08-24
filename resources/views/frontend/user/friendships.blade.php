@@ -10,11 +10,6 @@
                     users: @json($users),
                     loading: false,
                     search: '',
-                    toast: {
-                        show: false,
-                        message: '',
-                        type: 'success',
-                    },
 
                     get filteredUsers() {
                         const keyword = this.search.trim().toLowerCase();
@@ -30,12 +25,7 @@
                     },
 
                     showToast(message, type = 'success') {
-                        this.toast.message = message;
-                        this.toast.type = type;
-                        this.toast.show = true;
-                        setTimeout(() => {
-                            this.toast.show = false;
-                        }, 3000);
+                        Alpine.store('toast').notify(message, type);
                     },
 
                     normalizeUser(user) {
@@ -105,13 +95,6 @@
                 <h1 class="text-2xl font-bold">探索使用者</h1>
                 <input type="text" x-model="search" placeholder="{{ __('user.friendships.search.placeholder') }}"
                     class="input input-bordered w-full max-w-xs" />
-            </div>
-
-            <!-- Toast -->
-            <div x-show="toast.show" x-transition.opacity role="alert"
-                :class="toast.type === 'success' ? 'alert-success' : 'alert-error'"
-                class="toast toast-end fixed z-50">
-                <span x-text="toast.message"></span>
             </div>
 
             <template x-if="loading">
