@@ -114,18 +114,6 @@ services:
       <<: *app-env
       INSTANCE_NAME: app1
 
-  # app2:
-  #   <<: *app
-  #   environment:
-  #     <<: *app-env
-  #     INSTANCE_NAME: app2
-
-  # app3:
-  #   <<: *app
-  #   environment:
-  #     <<: *app-env
-  #     INSTANCE_NAME: app3
-
   queue:
     build:
       context: .
