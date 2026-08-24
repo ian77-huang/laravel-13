@@ -15,7 +15,7 @@
                         @foreach ($menus as $menu)
                             @if ($menu['childs'])
                                 <li>
-                                    <a href="{{ $menu['url'] }}">$menu['name']</a>
+                                    <a href="{{ $menu['url'] }}">{{ $menu['name'] }}</a>
                                     <ul class="p-2">
                                         @foreach ($menu['childs'] as $child)
                                             <li>

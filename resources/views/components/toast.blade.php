@@ -8,7 +8,7 @@
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <div>
-                <h3 class="text-base font-bold" x-text="item.title"></h3>
+                <h3 class="text-base font-bold" x-show="item.title" x-text="item.title"></h3>
                 <div class="text-xl" x-text="item.message"></div>
             </div>
             <div @click="$store.toast.close(item.id)" class="cursor-pointer text-xl" aria-label="關閉">

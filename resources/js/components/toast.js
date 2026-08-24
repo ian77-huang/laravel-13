@@ -34,8 +34,14 @@ const toast = () => {
         errorMsg(message) {
             this.notify(message, 'error')
         },
-        notify(message, type = 'success', delay = 5000) {
-            const id = add(message, type)
+        /**
+         * @param {string} message 內容
+         * @param {string} type success|error|info|warning
+         * @param {number} delay 自動關閉毫秒；0 表示不自動關
+         * @param {string} [title=''] 選填標題
+         */
+        notify(message, type = 'success', delay = 5000, title = '') {
+            const id = add(title, message, type)
 
             setTimeout(() => {
                 this.close(id)
