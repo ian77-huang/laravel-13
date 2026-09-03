@@ -18,8 +18,7 @@ class MenuService
 
     public function frontend(): array
     {
-        $users = [
-        ];
+        $users = [];
 
         if (Auth::check()) {
             $users['/user/profile'] = $this->createChilds(trans('menu.user.profile'), '/user/profile');
